@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import integrators as intg
+import integrators_HW2 as intg
 
         
 # Nonlinear state space form:
