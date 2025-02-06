@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import integrators as intg
+import integrators_HW2 as intg
 
         
 # Nonlinear state space form:
@@ -22,8 +22,8 @@ def step_input(t):
 t = 0; 
 x0 = np.array([1, 0]); # initial pos, vel
 u = 0
-dt = 0.1; 
-n = 100
+dt = 0.001; 
+n = int(10/dt)
 
 euler_integrator = intg.Euler(dt, f)
 heun_integrator = intg.Heun(dt, f)
