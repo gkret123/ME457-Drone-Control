@@ -68,4 +68,3 @@ plt.plot(t,x[:, 9:12], label=["p_sim (rad/s)", "q_sim (rad/s)", "r_sim (rad/s)"]
 plt.plot(t, np.array([w1, w2, [w_30 for _ in t]]).T, label=["p_analytical (rad/s)", "q_analytical (rad/s)", "r_analytical (rad/s)"], linestyle="dotted")
 plt.legend(loc="best")
 plt.show()
-
