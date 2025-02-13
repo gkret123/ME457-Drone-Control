@@ -9,7 +9,7 @@ The Propeller Heads
 import numpy as np
 import matplotlib.pyplot as plt
 import integrators_HW2 as intg
-import Parameters_HW2 as p
+import Parameters_Test as p
  
 #U is the input vector [f_x, f_y, f_z, l, m, n]
 #u,v,w is the velocity in the body frame
@@ -78,11 +78,11 @@ class rigid_body:
         T1 = self.J_xz*(self.J_xx - self.J_yy + self.J_zz)/T
         T2 = (self.J_zz*(self.J_zz - self.J_yy) + self.J_xz**2)/T
         T3 = self.J_zz/T
-        T4 = (self.J_zz - self.J_xx)/T
-        T5 = (self.J_xx - self.J_yy)/T
-        T6 = self.J_xz/T
-        T7 = (self.J_zz - self.J_xx)/T
-        T8 = self.J_xx*(self.J_xx - self.J_yy + self.J_zz)/T
+        T4 = self.J_xz/T
+        T5 = (self.J_zz-self.J_xx)/self.J_yy
+        T6 = self.J_xz/self.J_yy
+        T7 = ((self.J_xx - self.J_yy)*self.J_xx+self.J_xz**2)/T
+        T8 = self.J_xx/T
 
         E = np.array([[T1*p*q - T2*q*r],
                     [T5*p*r - T6*(p**2 - r**2)],
@@ -102,7 +102,7 @@ class rigid_body:
         V_dot = V_dot.flatten()
         Angle_dot = Angle_dot.flatten()
         Omega_dot = Omega_dot.flatten()
-
+        
         return np.concatenate((p_dot, V_dot, Angle_dot, Omega_dot), axis = 0)
     
     def simulate(self, x0, U, t_start, t_stop, dt=0.1):
@@ -125,7 +125,7 @@ class rigid_body:
         return t_history, x_rk4_history
 
 myPlane = rigid_body(p.mass, p.J_xx, p.J_yy, p.J_zz, p.J_xz, p.S, p.b, p.c, p.S_prop, p.rho, p.k_motor, p.k_T_p, p.k_Omega, p.e)
-t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,0,0,0]), np.array([0,0,0,0,0,1]), 0, 1, 0.1)
+t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,1,0,2]), np.array([0,0,0,0,0,0]), 0, 10, dt=0.1)
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]
 
