@@ -171,9 +171,11 @@ plt.tight_layout()
 plt.show()
 
 
-ax = plt.figure(figsize=(14,6)).add_subplot(projection='3d')
+ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
+# Prepare arrays x, y, z
 
-ax.plot(*x[:, 0:3].T, label='parametric curve')
+
+ax.plot(*x[:, 0:3].T, label='Position Vs. Time')
 ax.set_xlabel("North")
 ax.set_ylabel("East")
 ax.set_zlabel("Down")
