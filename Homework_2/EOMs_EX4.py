@@ -125,7 +125,7 @@ class rigid_body:
         return t_history, x_rk4_history
 
 myPlane = rigid_body(p.mass, p.J_xx, p.J_yy, p.J_zz, p.J_xz, p.S, p.b, p.c, p.S_prop, p.rho, p.k_motor, p.k_T_p, p.k_Omega, p.e)
-t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,0,0,0]), np.array([0,0,1,0,0,0]), 0, 10, dt=0.1)
+t, x = myPlane.simulate(np.array([0,0,100,0,0,0,0,0,0,0,0,0]), np.array([0,0,-p.mass*p.g,0,0,0]), 0, 10, dt=0.1)
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]
 
@@ -168,7 +168,7 @@ ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
 # Prepare arrays x, y, z
 
 
-ax.plot(*x[:, 0:3].T, label='parametric curve')
+ax.plot(*x[:, 0:3].T, label='Position Vs. Time')
 ax.set_xlabel("North")
 ax.set_ylabel("East")
 ax.set_zlabel("Down")
