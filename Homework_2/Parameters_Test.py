@@ -3,7 +3,7 @@
 
 #This file contains all the parameters for the simulation. It is used by the main file to set up the simulation.
 
-#use params for Aerosonde UAV (txtbk Appendix E)
+
 g = 9.81 #m/s^2
 mass = 1 #kg
 J_xx = 1 #kg*m^2
@@ -19,4 +19,3 @@ k_motor = 80 #rad/s/volt
 k_T_p = 0.0
 k_Omega = 0.0
 e = 0.9
-

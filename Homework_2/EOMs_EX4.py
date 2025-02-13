@@ -22,7 +22,7 @@ import Parameters_Test as p
 
 
 class rigid_body:
-    def __init__(self, mass, J_xx, J_yy, J_zz, J_xz, S, b, c, S_prop, rho, k_motor, k_T_p, k_Omega, e):
+    def __init__(self, mass, J_xx, J_yy, J_zz, J_xz, S, b, c, S_prop, rho, k_motor, k_T_p, k_Omega, e, gravity=False, g = 9.81):
         self.mass = mass
         self.J_xx = J_xx
         self.J_yy = J_yy
@@ -37,11 +37,14 @@ class rigid_body:
         self.k_T_p = k_T_p
         self.k_Omega = k_Omega
         self.e = e
+        self.gravity = gravity
+        self.g = g
         
     def x_dot(self, t, x, U):
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]
         f_x, f_y, f_z, l, m, n = U
+        
         
         p_n = x[0]
         p_e = x[1]
@@ -55,6 +58,11 @@ class rigid_body:
         p = x[9]
         q = x[10]
         r = x[11]
+        
+        if self.gravity:
+            f_x += self.mass*self.g*-np.sin(theta)
+            f_y += self.mass*self.g*np.cos(theta)*np.sin(phi)
+            f_z += self.mass*self.g*np.cos(theta)*np.cos(phi)
 
 
         #forces and moments        
@@ -107,7 +115,6 @@ class rigid_body:
     
     def simulate(self, x0, U, t_start, t_stop, dt=0.1):
         # maybe make U a function later
-        # maybe have gravity later
         rk4_integrator = intg.RK4(dt, self.x_dot)
 
         t_history = [t_start]
@@ -124,8 +131,8 @@ class rigid_body:
         
         return t_history, x_rk4_history
 
-myPlane = rigid_body(p.mass, p.J_xx, p.J_yy, p.J_zz, p.J_xz, p.S, p.b, p.c, p.S_prop, p.rho, p.k_motor, p.k_T_p, p.k_Omega, p.e)
-t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,0,0,0]), np.array([0,0,1,0,0,0]), 0, 10, dt=0.1)
+myPlane = rigid_body(p.mass, p.J_xx, p.J_yy, p.J_zz, p.J_xz, p.S, p.b, p.c, p.S_prop, p.rho, p.k_motor, p.k_T_p, p.k_Omega, p.e, gravity=True)
+t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,0,0,0]), np.array([0,0,0,0,0,0]), 0, 10, dt=0.1)
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]
 
@@ -164,9 +171,7 @@ plt.tight_layout()
 plt.show()
 
 
-ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
-# Prepare arrays x, y, z
-
+ax = plt.figure(figsize=(14,6)).add_subplot(projection='3d')
 
 ax.plot(*x[:, 0:3].T, label='parametric curve')
 ax.set_xlabel("North")
