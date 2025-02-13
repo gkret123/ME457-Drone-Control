@@ -140,6 +140,7 @@ x = np.array(x)
 fig, axs = plt.subplots(2, 2, figsize=(10, 15))
 
 # Position in NED frame
+#An increasing p_d represents a decreasing altitude
 axs[0,0].plot(t, x[:, 0:3])
 axs[0,0].legend(["p_n (m)", "p_e (m)", "p_d (m)"])
 axs[0,0].set_title("Position in NED Frame")
