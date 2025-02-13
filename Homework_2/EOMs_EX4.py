@@ -39,6 +39,22 @@ class rigid_body:
         self.e = e
         self.gravity = gravity
         self.g = g
+    
+    def euler2rot(self, phi, theta, psi):
+        R_01 = np.array([[np.cos(psi), -np.sin(psi), 0],
+                         [np.sin(psi), np.cos(psi), 0],
+                         [0, 0, 1]])
+        
+        R_12 = np.array([[np.cos(theta), 0, np.sin(theta)],
+                        [0, 1, 0],
+                        [-np.sin(theta), 0, np.cos(theta)]])
+        
+        R_23 = np.array([[1, 0, 0],
+                        [0, np.cos(phi), -np.sin(phi)],
+                        [0, np.sin(phi), np.cos(phi)]])
+        
+        R_0b = R_01 @ R_12 @ R_23
+        return R_0b
         
     def x_dot(self, t, x, U):
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
@@ -58,7 +74,9 @@ class rigid_body:
         p = x[9]
         q = x[10]
         r = x[11]
-        
+
+        R_0b = self.euler2rot(phi, theta, psi)
+
         if self.gravity:
             f_x += self.mass*self.g*-np.sin(theta)
             f_y += self.mass*self.g*np.cos(theta)*np.sin(phi)
@@ -114,7 +132,7 @@ class rigid_body:
         return np.concatenate((p_dot, V_dot, Angle_dot, Omega_dot), axis = 0)
     
     def simulate(self, x0, U, t_start, t_stop, dt=0.1):
-        # maybe make U a function later
+        # TODO: maybe make U a function later
         rk4_integrator = intg.RK4(dt, self.x_dot)
 
         t_history = [t_start]
