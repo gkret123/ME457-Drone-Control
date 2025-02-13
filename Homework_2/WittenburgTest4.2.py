@@ -23,7 +23,7 @@ t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,w_10, w_20, w_30]), np.array
 
 t = np.array(t)
 x = np.array(x)
-fig, axs = plt.subplots(2, 2, figsize=(10, 15))
+fig, axs = plt.subplots(2, 2, figsize=(20, 15))
 
 # Position in NED frame
 axs[0,0].plot(t, x[:, 0:3])
@@ -60,7 +60,10 @@ nu = w_30*(p.J_xx-p.J_zz)/p.J_xx
 w1 = w_10*np.cos(nu*(t-t_0))+w_20*np.sin(nu*(t-t_0))
 w2 = w_20*np.cos(nu*(t-t_0))-w_10*np.sin(nu*(t-t_0))
 
-# plt.figure(10,6)
+plt.figure(figsize=[10,6])
+plt.title("Analytical and Numerical solutions to Wittenburg 4.2")
+plt.xlabel("Time (s)")
+plt.ylabel("Angle (rad)")
 plt.plot(t,x[:, 9:12], label=["p_sim (rad/s)", "q_sim (rad/s)", "r_sim (rad/s)"])
 plt.plot(t, np.array([w1, w2, [w_30 for _ in t]]).T, label=["p_analytical (rad/s)", "q_analytical (rad/s)", "r_analytical (rad/s)"], linestyle="dotted")
 plt.legend(loc="best")
