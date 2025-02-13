@@ -59,8 +59,10 @@ class rigid_body:
     def x_dot(self, t, x, U):
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]
-        f_x, f_y, f_z, l, m, n = U
-        
+        if callable(U):
+            f_x, f_y, f_z, l, m, n = U(self, t, x)
+        else:
+            f_x, f_y, f_z, l, m, n = U
         
         p_n = x[0]
         p_e = x[1]
@@ -132,7 +134,9 @@ class rigid_body:
         return np.concatenate((p_dot, V_dot, Angle_dot, Omega_dot), axis = 0)
     
     def simulate(self, x0, U, t_start, t_stop, dt=0.1):
-        # TODO: maybe make U a function later
+        """
+        If U is a function of time, it should take in the rigid_body object, the current time, and the current state
+        """
         rk4_integrator = intg.RK4(dt, self.x_dot)
 
         t_history = [t_start]
