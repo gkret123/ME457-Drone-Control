@@ -59,10 +59,8 @@ class rigid_body:
     def x_dot(self, t, x, U):
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]
-        if callable(U):
-            f_x, f_y, f_z, l, m, n = U(self, t, x)
-        else:
-            f_x, f_y, f_z, l, m, n = U
+        
+        f_x, f_y, f_z, l, m, n = U
         
         p_n = x[0]
         p_e = x[1]
@@ -135,7 +133,7 @@ class rigid_body:
     
     def simulate(self, x0, U, t_start, t_stop, dt=0.1):
         """
-        If U is a function of time, it should take in the rigid_body object, the current time, and the current state
+        If U is a function of time, it should take in the rigid_body object, the current time, and the state history
         """
         rk4_integrator = intg.RK4(dt, self.x_dot)
 
@@ -146,7 +144,11 @@ class rigid_body:
         t = t_start
 
         while t < t_stop:
-            x_rk4 = rk4_integrator.step(t, x_rk4, U)
+            if callable(U):
+                U_temp = U(self, t, x_rk4_history)
+            else:
+                U_temp = U
+            x_rk4 = rk4_integrator.step(t, x_rk4, U_temp)
             t += dt
             t_history.append(t)
             x_rk4_history.append(x_rk4)
