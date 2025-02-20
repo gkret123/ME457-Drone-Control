@@ -24,54 +24,8 @@ import plot_results as pr
 
 class rigid_body:
     def __init__(self, parameters, gravity=False):        
-        self.mass = parameters.mass
-        self.J_xx = parameters.J_xx
-        self.J_yy = parameters.J_yy
-        self.J_zz = parameters.J_zz
-        self.J_xz = parameters.J_xz
-        self.S = parameters.S
-        self.b = parameters.b
-        self.c = parameters.c
-        self.S_prop = parameters.S_prop
-        self.rho = parameters.rho
-        self.k_motor = parameters.k_motor
-        self.k_T_p = parameters.k_T_p
-        self.k_Omega = parameters.k_Omega
-        self.e = parameters.e
+        self.__dict__.update(parameters.__dict__)
         self.gravity = gravity
-        self.g = parameters.g
-
-        self.C_L_0 = parameters.C_L_0
-        self.C_D_0 = parameters.C_D_0
-        self.C_m_0 = parameters.C_m_0
-        self.C_L_alpha = parameters.C_L_alpha
-        self.C_D_alpha = parameters.C_D_alpha
-        self.C_m_alpha = parameters.C_m_alpha
-        self.C_L_q = parameters.C_L_q
-        self.C_D_q = parameters.C_D_q
-        self.C_m_q = parameters.C_m_q
-        self.C_L_delta_e = parameters.C_L_delta_e
-        self.C_D_delta_e = parameters.C_D_delta_e
-        self.C_m_delta_e = parameters.C_m_delta_e
-
-        self.C_Y_0 = parameters.C_Y_0
-        self.C_ell_0 = parameters.C_ell_0
-        self.C_n_0 = parameters.C_n_0
-        self.C_Y_beta = parameters.C_Y_beta
-        self.C_ell_beta = parameters.C_ell_beta
-        self.C_n_beta = parameters.C_n_beta
-        self.C_Y_p = parameters.C_Y_p
-        self.C_ell_p = parameters.C_ell_p
-        self.C_n_p = parameters.C_n_p
-        self.C_Y_r = parameters.C_Y_r
-        self.C_ell_r = parameters.C_ell_r
-        self.C_n_r = parameters.C_n_r
-        self.C_Y_delta_a = parameters.C_Y_delta_a
-        self.C_ell_delta_a = parameters.C_ell_delta_a
-        self.C_n_delta_a = parameters.C_n_delta_a
-        self.C_Y_delta_r = parameters.C_Y_delta_r
-        self.C_ell_delta_r = parameters.C_ell_delta_r
-        self.C_n_delta_r = parameters.C_n_delta_r
     
     def euler2rot(self, phi, theta, psi):
         R_01 = np.array([[np.cos(psi), -np.sin(psi), 0],
