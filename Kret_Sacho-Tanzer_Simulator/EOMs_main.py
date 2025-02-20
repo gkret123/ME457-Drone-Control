@@ -155,34 +155,3 @@ class rigid_body:
             x_rk4_history.append(x_rk4)
         
         return t_history, x_rk4_history
-
-
-
-
-IC_x_0 = np.array([0, #p_n
-                   0, #p_e
-                   0, #p_d
-                   0,  #u
-                   0, #v
-                   0, #w
-                   0, #phi
-                   0, #theta
-                   0, #psi
-                   0, #p
-                   0, #q
-                   0 #r
-                   ])
-
-IC_U = np.array([0, #f_x
-                0, #f_y
-                0, #f_z
-                0, #l
-                0, #m
-                0 #n
-                ])
-
-t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,0,0,0]), np.array([0,0,0,0,0,0]), 0, 10, dt=0.1)
-        #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
-        #inputs: U = [f_x, f_y, f_z, l, m, n]
-
-pr.plot_results(t, x, "Zero IC's")
