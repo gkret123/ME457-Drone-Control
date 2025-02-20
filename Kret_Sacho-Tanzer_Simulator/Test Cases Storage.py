@@ -50,16 +50,8 @@ elif case_num == 2:
                     0, #q
                     0 #r
                     ])
-
-    U = np.array([0, #f_x
-                    0, #f_y
-                    0, #f_z
-                    0, #l
-                    0, #m
-                    0 #n
-                    ])
     myPlane = ac.Aircraft(p, gravity=False)
-    t, x = myPlane.simulate(x_0, U, 0, 10, dt=0.1)
+    t, x = myPlane.simulate(x_0, 0, 10, dt=0.1)
 
 EOMs.pr.plot_results(t, x, title=title)
 

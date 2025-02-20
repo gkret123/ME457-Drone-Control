@@ -53,6 +53,25 @@ class rigid_body:
         self.C_L_delta_e = parameters.C_L_delta_e
         self.C_D_delta_e = parameters.C_D_delta_e
         self.C_m_delta_e = parameters.C_m_delta_e
+
+        self.C_Y_0 = parameters.C_Y_0
+        self.C_ell_0 = parameters.C_ell_0
+        self.C_n_0 = parameters.C_n_0
+        self.C_Y_beta = parameters.C_Y_beta
+        self.C_ell_beta = parameters.C_ell_beta
+        self.C_n_beta = parameters.C_n_beta
+        self.C_Y_p = parameters.C_Y_p
+        self.C_ell_p = parameters.C_ell_p
+        self.C_n_p = parameters.C_n_p
+        self.C_Y_r = parameters.C_Y_r
+        self.C_ell_r = parameters.C_ell_r
+        self.C_n_r = parameters.C_n_r
+        self.C_Y_delta_a = parameters.C_Y_delta_a
+        self.C_ell_delta_a = parameters.C_ell_delta_a
+        self.C_n_delta_a = parameters.C_n_delta_a
+        self.C_Y_delta_r = parameters.C_Y_delta_r
+        self.C_ell_delta_r = parameters.C_ell_delta_r
+        self.C_n_delta_r = parameters.C_n_delta_r
     
     def euler2rot(self, phi, theta, psi):
         R_01 = np.array([[np.cos(psi), -np.sin(psi), 0],
@@ -159,7 +178,7 @@ class rigid_body:
 
         while t < t_stop:
             if callable(U):
-                U_temp = U(self, t, x_rk4_history)
+                U_temp = U(t, x_rk4_history)
             else:
                 U_temp = U
             x_rk4 = rk4_integrator.step(t, x_rk4, U_temp)
