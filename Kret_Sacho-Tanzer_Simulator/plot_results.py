@@ -36,7 +36,6 @@ def plot_results(t, x, title = "Test Case"):
     axs[1,1].set_ylabel("Angular Velocity (rad/s)")
 
     plt.tight_layout()
-    plt.show()
 
 
     ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
@@ -46,3 +45,4 @@ def plot_results(t, x, title = "Test Case"):
     ax.set_xlabel("North")
     ax.set_ylabel("East")
     ax.set_zlabel("Down")
+    plt.show()
