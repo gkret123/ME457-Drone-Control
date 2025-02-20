@@ -156,7 +156,7 @@ class rigid_body:
         
         return t_history, x_rk4_history
 
-myPlane = rigid_body(p.mass, p.J_xx, p.J_yy, p.J_zz, p.J_xz, p.S, p.b, p.c, p.S_prop, p.rho, p.k_motor, p.k_T_p, p.k_Omega, p.e, gravity=True)
+
 
 
 IC_x_0 = np.array([0, #p_n
