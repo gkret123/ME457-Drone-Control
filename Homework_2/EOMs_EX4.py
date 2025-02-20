@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import integrators_HW2 as intg
 import Parameters_Test as p
+import plot_results as pr
  
 #U is the input vector [f_x, f_y, f_z, l, m, n]
 #u,v,w is the velocity in the body frame
@@ -156,55 +157,9 @@ class rigid_body:
         return t_history, x_rk4_history
 
 myPlane = rigid_body(p.mass, p.J_xx, p.J_yy, p.J_zz, p.J_xz, p.S, p.b, p.c, p.S_prop, p.rho, p.k_motor, p.k_T_p, p.k_Omega, p.e, gravity=True)
+
 t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,0,0,0]), np.array([0,0,0,0,0,0]), 0, 10, dt=0.1)
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]
 
-x = np.array(x)
-fig, axs = plt.subplots(2, 2, figsize=(10, 15))
-
-# Position in NED frame
-#An increasing p_d represents a decreasing altitude
-axs[0,0].plot(t, x[:, 0:3])
-axs[0,0].legend(["p_n (m)", "p_e (m)", "p_d (m)"])
-axs[0,0].set_title("Position in NED Frame")
-axs[0,0].set_xlabel("Time (s)")
-axs[0,0].set_ylabel("Position (m)")
-
-# Velocity in body frame
-axs[0, 1].plot(t, x[:, 3:6])
-axs[0,1].legend(["u (m/s)", "v (m/s)", "w (m/s)"])
-axs[0,1].set_title("Linear Velocity in Body Frame")
-axs[0,1].set_xlabel("Time (s)")
-axs[0,1].set_ylabel("Velocity (m/s)")
-
-# Euler angles
-axs[1,0].plot(t, x[:, 6:9])
-axs[1,0].legend(["phi (rad)", "theta (rad)", "psi (rad)"])
-axs[1,0].set_title("Euler Angles")
-axs[1,0].set_xlabel("Time (s)")
-axs[1,0].set_ylabel("Angle (rad)")
-
-# Angular velocities
-axs[1,1].plot(t, x[:, 9:12])
-axs[1,1].legend(["p (rad/s)", "q (rad/s)", "r (rad/s)"])
-axs[1,1].set_title("Angular Velocities")
-axs[1,1].set_xlabel("Time (s)")
-axs[1,1].set_ylabel("Angular Velocity (rad/s)")
-
-plt.tight_layout()
-plt.show()
-
-
-ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
-# Prepare arrays x, y, z
-
-
-ax.plot(*x[:, 0:3].T, label='Position Vs. Time')
-ax.set_xlabel("North")
-ax.set_ylabel("East")
-ax.set_zlabel("Down")
-ax.legend()
-
-plt.show()
-
+pr.plot_results(t, x, "Zero IC's")
