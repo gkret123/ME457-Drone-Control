@@ -158,6 +158,29 @@ class rigid_body:
 
 myPlane = rigid_body(p.mass, p.J_xx, p.J_yy, p.J_zz, p.J_xz, p.S, p.b, p.c, p.S_prop, p.rho, p.k_motor, p.k_T_p, p.k_Omega, p.e, gravity=True)
 
+
+IC_x_0 = np.array([0, #p_n
+                   0, #p_e
+                   0, #p_d
+                   0,  #u
+                   0, #v
+                   0, #w
+                   0, #phi
+                   0, #theta
+                   0, #psi
+                   0, #p
+                   0, #q
+                   0 #r
+                   ])
+
+IC_U = np.array([0, #f_x
+                0, #f_y
+                0, #f_z
+                0, #l
+                0, #m
+                0 #n
+                ])
+
 t, x = myPlane.simulate(np.array([0,0,0,0,0,0,0,0,0,0,0,0]), np.array([0,0,0,0,0,0]), 0, 10, dt=0.1)
         #state: x = [p_n, p_e, p_d, u, v, w, phi, theta, psi, p, q, r]
         #inputs: U = [f_x, f_y, f_z, l, m, n]

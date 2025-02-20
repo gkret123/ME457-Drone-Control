@@ -41,8 +41,7 @@ def plot_results(t, x, title = "Test Case"):
 
     ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
     # Prepare arrays x, y, z
-
-
+    
     ax.plot(*x[:, 0:3].T, label='Position Vs. Time')
     ax.set_xlabel("North")
     ax.set_ylabel("East")
