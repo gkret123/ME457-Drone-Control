@@ -34,13 +34,13 @@ if case_num == 1:
     t, x = myPlane.simulate(x_0, U, 0, 10, dt=0.1)
     
     
-#2. Plane with down wind, no gravity
+#2. Plane
 elif case_num == 2:
     title = "Zero Initial Conditions"
     x_0 = np.array([0, #p_n
                     0, #p_e
                     0, #p_d
-                    0,  #u
+                    2, #u
                     0, #v
                     0, #w
                     0, #phi
@@ -50,8 +50,8 @@ elif case_num == 2:
                     0, #q
                     0 #r
                     ])
-    myPlane = ac.Aircraft(p, gravity=False)
-    t, x = myPlane.simulate(x_0, 0, 10, dt=0.1)
+    myPlane = ac.Aircraft(p, gravity=True)
+    t, x = myPlane.simulate(x_0, 0, 5, dt=0.1)
 
 EOMs.pr.plot_results(t, x, title=title)
 

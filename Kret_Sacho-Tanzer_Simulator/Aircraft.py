@@ -71,11 +71,11 @@ class Aircraft(rigid_body):
 
     def get_forces(self, t, x_rk4_history):
         # wind = wind(t)
-        wind = np.array([-1, 0, 0])  # In body frame
+        wind = np.array([0, 0, 0])  # In body frame
         # deflections = controller(t, x_rk4_history)
         deflections = np.array([0, 0, 0])
         
-        U = self.get_aero_forces(x_rk4_history[-1], wind, deflections)
+        U = self.get_aero_forces(x_rk4_history[-1], wind, deflections) + np.array([10, 0, 0, 0, 0, 0]) # + thrust
         return U
 
     def simulate(self, x0, t_start, t_stop, dt=0.1):

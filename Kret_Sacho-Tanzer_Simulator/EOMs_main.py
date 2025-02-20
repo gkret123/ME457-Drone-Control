@@ -64,11 +64,6 @@ class rigid_body:
 
         R_0b = self.euler2rot(phi, theta, psi)
 
-        if self.gravity:  # TODO: move this
-            f_x += self.mass*self.g*-np.sin(theta)
-            f_y += self.mass*self.g*np.cos(theta)*np.sin(phi)
-            f_z += self.mass*self.g*np.cos(theta)*np.cos(phi)
-
 
         #forces and moments        
         A = np.array([[np.cos(theta)*np.cos(psi), np.sin(phi)*np.sin(theta)*np.cos(psi)-np.cos(phi)*np.sin(psi), np.cos(phi)*np.sin(theta)*np.cos(psi)+np.sin(phi)*np.sin(psi)],
@@ -135,6 +130,12 @@ class rigid_body:
                 U_temp = U(t, x_rk4_history)
             else:
                 U_temp = U
+            if self.gravity:
+                theta, phi = x_rk4_history[-1][7], x_rk4_history[-1][6]
+                U_temp[0] += self.mass*self.g*-np.sin(theta)
+                U_temp[1] += self.mass*self.g*np.cos(theta)*np.sin(phi)
+                U_temp[2] += self.mass*self.g*np.cos(theta)*np.cos(phi)
+
             x_rk4 = rk4_integrator.step(t, x_rk4, U_temp)
             t += dt
             t_history.append(t)
