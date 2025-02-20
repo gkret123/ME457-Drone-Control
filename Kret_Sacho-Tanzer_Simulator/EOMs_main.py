@@ -23,23 +23,36 @@ import plot_results as pr
 
 
 class rigid_body:
-    def __init__(self, mass, J_xx, J_yy, J_zz, J_xz, S, b, c, S_prop, rho, k_motor, k_T_p, k_Omega, e, gravity=False, g = 9.81):
-        self.mass = mass
-        self.J_xx = J_xx
-        self.J_yy = J_yy
-        self.J_zz = J_zz
-        self.J_xz = J_xz
-        self.S = S
-        self.b = b
-        self.c = c
-        self.S_prop = S_prop
-        self.rho = rho
-        self.k_motor = k_motor
-        self.k_T_p = k_T_p
-        self.k_Omega = k_Omega
-        self.e = e
+    def __init__(self, parameters, gravity=False):        
+        self.mass = parameters.mass
+        self.J_xx = parameters.J_xx
+        self.J_yy = parameters.J_yy
+        self.J_zz = parameters.J_zz
+        self.J_xz = parameters.J_xz
+        self.S = parameters.S
+        self.b = parameters.b
+        self.c = parameters.c
+        self.S_prop = parameters.S_prop
+        self.rho = parameters.rho
+        self.k_motor = parameters.k_motor
+        self.k_T_p = parameters.k_T_p
+        self.k_Omega = parameters.k_Omega
+        self.e = parameters.e
         self.gravity = gravity
-        self.g = g
+        self.g = parameters.g
+
+        self.C_L_0 = parameters.C_L_0
+        self.C_D_0 = parameters.C_D_0
+        self.C_m_0 = parameters.C_m_0
+        self.C_L_alpha = parameters.C_L_alpha
+        self.C_D_alpha = parameters.C_D_alpha
+        self.C_m_alpha = parameters.C_m_alpha
+        self.C_L_q = parameters.C_L_q
+        self.C_D_q = parameters.C_D_q
+        self.C_m_q = parameters.C_m_q
+        self.C_L_delta_e = parameters.C_L_delta_e
+        self.C_D_delta_e = parameters.C_D_delta_e
+        self.C_m_delta_e = parameters.C_m_delta_e
     
     def euler2rot(self, phi, theta, psi):
         R_01 = np.array([[np.cos(psi), -np.sin(psi), 0],
@@ -78,7 +91,7 @@ class rigid_body:
 
         R_0b = self.euler2rot(phi, theta, psi)
 
-        if self.gravity:
+        if self.gravity:  # TODO: move this
             f_x += self.mass*self.g*-np.sin(theta)
             f_y += self.mass*self.g*np.cos(theta)*np.sin(phi)
             f_z += self.mass*self.g*np.cos(theta)*np.cos(phi)
