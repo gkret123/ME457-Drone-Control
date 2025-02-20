@@ -5,15 +5,15 @@
 
 
 mass = 11. #kg
-# J_xx = 0.8244 #kg m^2
-# J_yy = 1.135 #kg*m^2
-# J_zz = 1.759 #kg*m^2
-# J_xz = 0.1204 #kg*m^2
+J_xx = 0.8244 #kg m^2
+J_yy = 1.135 #kg*m^2
+J_zz = 1.759 #kg*m^2
+J_xz = 0.1204 #kg*m^2
 
-J_xx = 2 #kg m^2
-J_yy = 1 #kg*m^2
-J_zz = 1 #kg*m^2
-J_xz = 0 #kg*m^2
+# J_xx = 2 #kg m^2
+# J_yy = 1 #kg*m^2
+# J_zz = 1 #kg*m^2
+# J_xz = 0 #kg*m^2
 
 g = 9.81 #m/s^2
 S = 0.55 #m^2

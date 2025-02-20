@@ -33,6 +33,8 @@ class Aircraft(rigid_body):
         alpha = np.arctan2(w_r, u_r)
         beta = np.arctan2(v_r, np.sqrt(u_r**2 + w_r**2))
 
+        print(f"AOA: {alpha}, Sideslip: {beta}")
+
         rho = self.rho
         S = self.S
         c = self.c
@@ -75,7 +77,7 @@ class Aircraft(rigid_body):
         # deflections = controller(t, x_rk4_history)
         deflections = np.array([0, 0, 0])
         
-        U = self.get_aero_forces(x_rk4_history[-1], wind, deflections) + np.array([10, 0, 0, 0, 0, 0]) # + thrust
+        U = self.get_aero_forces(x_rk4_history[-1], wind, deflections) # + np.array([10, 0, 0, 0, 0, 0]) # + thrust
         return U
 
     def simulate(self, x0, t_start, t_stop, dt=0.1):

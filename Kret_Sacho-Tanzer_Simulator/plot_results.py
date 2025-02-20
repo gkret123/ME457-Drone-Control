@@ -1,8 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from datetime import datetime
 
 def plot_results(t, x, title = "Test Case"):
+    now = datetime.now()
+    timestamp = now.strftime('%m-%d-%Y_%I-%M=%S_%p')
     x = np.array(x)
     fig, axs = plt.subplots(2, 2, figsize=(10, 10))
     plt.suptitle(title)
@@ -36,6 +39,7 @@ def plot_results(t, x, title = "Test Case"):
     axs[1,1].set_ylabel("Angular Velocity (rad/s)")
 
     plt.tight_layout()
+    plt.savefig(f"./Plots/PlotLog/flight_dynamics_plot_{timestamp}.png")
 
 
     ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
@@ -45,4 +49,11 @@ def plot_results(t, x, title = "Test Case"):
     ax.set_xlabel("North")
     ax.set_ylabel("East")
     ax.set_zlabel("Down")
+
+    ax.plot(*x[0, 0:3], marker='o', markersize=5, color='g', label = "Start")
+    ax.plot(*x[-1, 0:3], marker='o', markersize=5, color='r', label = "End")
+    ax.legend()
+    plt.title("3D Position")
+    plt.savefig(f"./Plots/PlotLog/3D_plot_{timestamp}.png")
+
     plt.show()
