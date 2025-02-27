@@ -6,7 +6,8 @@ import Aircraft as ac
 
 case_num = int(input("Enter the test case number: "))
 
-#1. Zero Initial Conditions
+#1. Zero Initial Conditions2
+
 if case_num == 1:
     title = "Zero Initial Conditions"
     x_0 = np.array([0, #p_n

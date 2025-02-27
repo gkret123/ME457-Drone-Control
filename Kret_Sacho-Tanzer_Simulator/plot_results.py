@@ -39,7 +39,7 @@ def plot_results(t, x, title = "Test Case"):
     axs[1,1].set_ylabel("Angular Velocity (rad/s)")
 
     plt.tight_layout()
-    plt.savefig(f"./Plots/PlotLog/flight_dynamics_plot_{timestamp}.png")
+    plt.savefig(f"./Kret_Sacho-Tanzer_Simulator/Plots/PlotLog/flight_dynamics_plot_{timestamp}.png")
 
 
     ax = plt.figure(figsize=(10,6)).add_subplot(projection='3d')
@@ -54,6 +54,6 @@ def plot_results(t, x, title = "Test Case"):
     ax.plot(*x[-1, 0:3], marker='o', markersize=5, color='r', label = "End")
     ax.legend()
     plt.title("3D Position")
-    plt.savefig(f"./Plots/PlotLog/3D_plot_{timestamp}.png")
+    plt.savefig(f"./Kret_Sacho-Tanzer_Simulator/Plots/PlotLog/3D_plot_{timestamp}.png")
 
     plt.show()
