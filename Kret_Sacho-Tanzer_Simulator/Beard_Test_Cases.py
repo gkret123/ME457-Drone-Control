@@ -12,8 +12,8 @@ throttle = 1.
 
 mav = ac(p)
 
-
-quaternion = [ 9.38688796e-01, 2.47421558e-01, 6.56821468e-02, 2.30936730e-01]
+# quat = [x, y, z, w]
+quaternion = [2.47421558e-01, 6.56821468e-02, 2.30936730e-01, 9.38688796e-01]
 rotation = R.from_quat(quaternion)
 euler = rotation.as_euler('xyz', degrees=False)
 
@@ -40,7 +40,7 @@ state = np.array([[ 6.19506532e+01],
 # print("Q_p: " , Q_p, "\n\n")
 
 forcesAndMoments = mav.get_aero_forces(state, [0, 0, 0], [elevator, aileron, rudder])
-print("Forces and Moments : Case 1" , "\n")
+print("Forces and Moments : Case 2" , "\n")
 print("fx: " , forcesAndMoments.item(0))
 print("fy: " , forcesAndMoments.item(1))
 print("fz: " , forcesAndMoments.item(2))
@@ -49,7 +49,7 @@ print("My: " , forcesAndMoments.item(4))
 print("Mz: " , forcesAndMoments.item(5) , "\n\n")
 
 x_dot = mav.x_dot(0, state, forcesAndMoments)
-print("State Derivatives : Case 1", "\n")
+print("State Derivatives : Case 2", "\n")
 print("north_dot: ", x_dot.item(0))
 print("east_dot: ", x_dot.item(1))
 print("down_dot: ", x_dot.item(2))
