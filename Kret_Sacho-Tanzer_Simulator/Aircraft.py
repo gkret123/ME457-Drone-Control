@@ -10,7 +10,6 @@ class Aircraft(rigid_body):
         # Deflections = delta_e, delta_a, delta_r
         delta_e, delta_a, delta_r = deflections
 
-        
         u = state[3]
         v = state[4]
         w = state[5]
@@ -54,19 +53,19 @@ class Aircraft(rigid_body):
         C_m_delta_e = self.C_m_delta_e
 
         # Longitudinal forces:
-        
-        F_lift = 0.5*rho*V_a_mag**2*S*(C_L_0 + C_L_alpha * alpha + C_L_q*c*q/(2*V_a_mag) + C_L_delta_e*delta_e)
-        F_drag = 0.5*rho*V_a_mag**2*S*(C_D_0 + C_D_alpha * alpha + C_D_q*c*q/(2*V_a_mag) + C_D_delta_e*delta_e)
-        m = 0.5*rho*V_a_mag**2*S*c*(C_m_0 + C_m_alpha * alpha + C_m_q*c*q/(2*V_a_mag) + C_m_delta_e*delta_e)
+        # NOTE: these deg2rads are here for testing, probably should not exist!
+        F_lift = 0.5*rho*V_a_mag**2*S*(C_L_0 + C_L_alpha * np.rad2deg(1) * alpha + C_L_q*c*q/(2*V_a_mag) + C_L_delta_e*delta_e)
+        F_drag = 0.5*rho*V_a_mag**2*S*(C_D_0 + C_D_alpha  * np.rad2deg(1) * alpha + C_D_q*c*q/(2*V_a_mag) + C_D_delta_e*delta_e)
+        m = 0.5*rho*V_a_mag**2*S*c*(C_m_0 + C_m_alpha * np.rad2deg(1) * alpha + C_m_q*c*q/(2*V_a_mag) + C_m_delta_e*delta_e)
 
         f_x, f_z = np.array([[np.cos(alpha), -np.sin(alpha)], [np.sin(alpha), np.cos(alpha)]]) @ np.array([-F_drag, -F_lift])
 
         # For symmetric aircraft: C_Y_0 = C_ell_0 = C_n_0 = 0
         
         # Lateral forces:
-        f_y = 0.5*rho*V_a_mag**2*S*(self.C_Y_0 + self.C_Y_beta*beta + self.C_Y_p*b*p/(2*V_a_mag) + self.C_Y_r*b*r/(2*V_a_mag) + self.C_Y_delta_a*delta_a + self.C_Y_delta_r*delta_r)
-        l = 0.5*rho*V_a_mag**2*S*b*(self.C_ell_0 + self.C_ell_beta*beta + self.C_ell_p*b*p/(2*V_a_mag) + self.C_ell_r*b*r/(2*V_a_mag) + self.C_ell_delta_a*delta_a + self.C_ell_delta_r*delta_r)
-        n = 0.5*rho*V_a_mag**2*S*b*(self.C_n_0 + self.C_n_beta*beta + self.C_n_p*b*p/(2*V_a_mag) + self.C_n_r*b*r/(2*V_a_mag) + self.C_n_delta_a*delta_a + self.C_n_delta_r*delta_r)
+        f_y = 0.5*rho*V_a_mag**2*S*(self.C_Y_0 + self.C_Y_beta * np.rad2deg(1) *beta + self.C_Y_p*b*p/(2*V_a_mag) + self.C_Y_r*b*r/(2*V_a_mag) + self.C_Y_delta_a*delta_a + self.C_Y_delta_r*delta_r)
+        l = 0.5*rho*V_a_mag**2*S*b*(self.C_ell_0 + self.C_ell_beta * np.rad2deg(1) *beta + self.C_ell_p*b*p/(2*V_a_mag) + self.C_ell_r*b*r/(2*V_a_mag) + self.C_ell_delta_a*delta_a + self.C_ell_delta_r*delta_r)
+        n = 0.5*rho*V_a_mag**2*S*b*(self.C_n_0 + self.C_n_beta * np.rad2deg(1)*beta + self.C_n_p*b*p/(2*V_a_mag) + self.C_n_r*b*r/(2*V_a_mag) + self.C_n_delta_a*delta_a + self.C_n_delta_r*delta_r)
         
         return np.array([f_x, f_y, f_z, l, m, n])
 
