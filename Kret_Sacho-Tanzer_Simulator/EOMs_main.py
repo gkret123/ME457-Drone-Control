@@ -112,11 +112,11 @@ class rigid_body:
         Omega_dot = Omega_dot.flatten()
         
         return np.concatenate((p_dot, V_dot, Angle_dot, Omega_dot), axis = 0)
-    
+    """
     def simulate(self, x0, U, t_start, t_stop, dt=0.1):
-        """
-        If U is a function of time, it should take in the rigid_body object, the current time, and the state history
-        """
+        
+        #If U is a function of time, it should take in the rigid_body object, the current time, and the state history
+        
         rk4_integrator = intg.RK4(dt, self.x_dot)
 
         t_history = [t_start]
@@ -141,4 +141,42 @@ class rigid_body:
             t_history.append(t)
             x_rk4_history.append(x_rk4)
         
+        return t_history, x_rk4_history
+   """ 
+    def simulate(self, x0, U, t_start, t_stop, dt=0.1):
+    
+        rk4_integrator = intg.RK4(dt, self.x_dot)
+
+        t_history = [t_start]
+        x_rk4_history = [x0]
+
+        x_rk4 = x0
+        t = t_start
+
+        while t < t_stop:
+            if callable(U):
+                U_temp = U(t, x_rk4_history)
+            else:
+                U_temp = U
+            if self.gravity:
+                # Get the Euler angles from the current state (phi, theta, psi)
+                current_state = x_rk4_history[-1]
+                phi = current_state[6]
+                theta = current_state[7]
+                psi = current_state[8]
+                # Compute the rotation matrix from body to inertial frame
+                R_0b = self.euler2rot(phi, theta, psi)
+                # Define the gravity vector in the inertial frame.
+                # Here we assume gravity acts in the positive z_inertial direction (downwards in the NED frame).
+                g_inertial = np.array([0, 0, self.g])
+                # Transform gravity into the body frame:
+                g_body = R_0b.T @ g_inertial
+                # Add the gravitational force in the body frame:
+                U_temp[0:3] += self.mass * g_body
+
+            x_rk4 = rk4_integrator.step(t, x_rk4, U_temp)
+            t += dt
+            t_history.append(t)
+            x_rk4_history.append(x_rk4)
+
         return t_history, x_rk4_history

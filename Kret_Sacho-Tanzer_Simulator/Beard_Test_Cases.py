@@ -16,7 +16,7 @@ mav = ac(p)
 quaternion = [2.47421558e-01, 6.56821468e-02, 2.30936730e-01, 9.38688796e-01]
 rotation = R.from_quat(quaternion)
 euler = rotation.as_euler('xyz', degrees=False)
-
+"""
 state = np.array([[ 6.19506532e+01],
  [ 2.22940203e+01],
  [-1.10837551e+02],
@@ -33,7 +33,27 @@ state = np.array([[ 6.19506532e+01],
  [ 4.98772167e-03],
  [ 1.68736005e-01],
  [ 1.71797313e-01]]).flatten()
+"""
 
+elevator = -0.2
+aileron = 0.0
+rudder = 0.005
+throttle = 0.5
+north0 = 0.  # initial north position
+east0 = 0.  # initial east position
+down0 = -100.0  # initial down position
+u0 = 25.  # initial velocity along body x-axis
+v0 = 0.  # initial velocity along body y-axis
+w0 = 0.  # initial velocity along body z-axis
+phi0 = 0.  # initial roll angle
+theta0 = 0.  # initial pitch angle
+psi0 = 0.0  # initial yaw angle
+p0 = 0  # initial roll rate
+q0 = 0  # initial pitch rate
+r0 = 0  # initial yaw rate
+Va0 = np.sqrt(u0**2+v0**2+w0**2)
+
+state = np.array([[north0, east0, down0, u0, v0, w0, phi0, theta0, psi0, p0, q0, r0]]).flatten()
 # T_p, Q_p = mav._motor_thrust_torque(mav._Va, delta.throttle)
 # print("Propeller Forces and Torque", "\n")
 # print("T_p: " , T_p)
