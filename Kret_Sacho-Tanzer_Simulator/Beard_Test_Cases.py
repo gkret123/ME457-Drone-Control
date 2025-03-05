@@ -2,7 +2,8 @@ import numpy as np
 from Aircraft import Aircraft as ac
 from scipy.spatial.transform import Rotation as R
 import Parameters_Test as p
-
+from EOMs_main import rigid_body as rb
+"""
 ##### Case 1 ######
 
 elevator = -0.15705144
@@ -83,3 +84,21 @@ print("  psi_dot: ", x_dot.item(8))
 print("   p_dot: ", x_dot.item(9))
 print("   q_dot: ", x_dot.item(10))
 print("    r_dt: ", x_dot.item(11) , "\n\n\n")
+"""
+
+"""
+# Rigid body test:
+quaternion = [0, 0, 0, 1]
+rotation = R.from_quat(quaternion)
+euler = rotation.as_euler('xyz', degrees=False)
+
+state = np.array([[5], [2], [-20], [5], [0], [0], [euler[0]], [euler[1]], [euler[2]], [1], [0.5], [0]]).flatten()
+
+U = np.array([10, 5, 0, 0, 14, 0])
+body = rb(p, gravity=False)
+
+
+state_dot = body.x_dot(0, state, U)
+
+print(state_dot)
+"""
