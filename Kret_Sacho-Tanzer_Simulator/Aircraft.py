@@ -86,7 +86,7 @@ REMOVED, REPLACEMENT FUNCTION BELOW
 
 class Aircraft(rigid_body):
     def __init__(self, parameters, gravity=True):  # in future: wind, controller are parameters
-        super().__init__(parameters, gravity)
+        super().__init__(parameters)
 
     def get_aero_forces(self, state, wind, deflections):
         # Whatever wind vector we receive should be expressed in the body frame
@@ -148,7 +148,7 @@ class Aircraft(rigid_body):
         # In the stability frame, drag acts opposite to the relative wind and lift is perpendicular.
         # Here we rotate by alpha to obtain the body-frame components.
         f_x, f_z = np.array([[np.cos(alpha), np.sin(alpha)],
-                              [-np.sin(alpha),  np.cos(alpha)]]) @ np.array([-F_drag, -F_lift]) - [-12.43/2,0]
+                              [-np.sin(alpha),  np.cos(alpha)]]) @ np.array([-F_drag, -F_lift])# - [-12.43/2,0]
         print(f"Drag: {F_drag}, Lift: {F_lift}")
         print(f"Drag in body frame: {f_x}, Lift in body frame: {f_z}")
         # Lateral forces:
@@ -166,36 +166,52 @@ class Aircraft(rigid_body):
             self.C_n_delta_r * delta_r)
         
         M_x, M_z = np.array([[np.cos(beta), np.sin(beta)],
-                              [-np.sin(beta),  np.cos(beta)]]) @ np.array([l, n]) - [-0.49879620097737787 , 0]
-        # --- NEW: Include gravity by transforming the inertial gravity vector to the body frame ---
-        if self.gravity:
-            # Get Euler angles from state (assumed to be [phi, theta, psi] at indices 6, 7, 8)
-            phi = state[6]
-            theta = state[7]
-            psi = state[8]
-            R_0b = self.euler2rot(phi, theta, psi)
-            # Define gravity in the inertial frame (NED: positive z is down)
-            g_inertial = np.array([0, 0, self.g])
-            # Transform gravity into the body frame:
-            g_body = R_0b.T @ g_inertial
-            thrust_body =R_0b.T @ np.array([-12.43/2 , 0, 0])
-            
-            # Add the gravitational force (F = m * g) to the aerodynamic force vector:
-            f_x += self.mass * g_body[0] + thrust_body[0]
-            f_y += self.mass * g_body[1] #+ thrust_body[1]
-            f_z += self.mass * g_body[2] #+ thrust_body[2]
+                              [-np.sin(beta),  np.cos(beta)]]) @ np.array([l, n])#  - [-0.49879620097737787 , 0]
 
         return np.array([f_x, f_y, f_z, M_x, m, M_z])
     
+    def get_gravity(self, state):
+        # --- NEW: Include gravity by transforming the inertial gravity vector to the body frame ---
+        # Get Euler angles from state (assumed to be [phi, theta, psi] at indices 6, 7, 8)
+        phi = state[6]
+        theta = state[7]
+        psi = state[8]
+        R_0b = self.euler2rot(phi, theta, psi)
+        # Define gravity in the inertial frame (NED: positive z is down)
+        g_inertial = np.array([0, 0, self.g])
+        # Transform gravity into the body frame:
+        g_body = R_0b.T @ g_inertial
+        # thrust_body =R_0b.T @ np.array([-12.43/2 , 0, 0])
+        
+        # Add the gravitational force (F = m * g) to the aerodynamic force vector:
+        f_x = self.mass * g_body[0]
+        f_y = self.mass * g_body[1]
+        f_z = self.mass * g_body[2]
+        return np.array([f_x, f_y, f_z, 0, 0, 0])  # gravity can never apply moments
+
+    def get_thrust(self, T_p, Q_p):
+        # T_p = -12.43072534597213
+        # Q_p = -0.49879620097737787
+        f_x = T_p
+        # f_x = -3.45623356351  # this value of T_p gives the correct results for case 1
+        f_y = 0
+        f_z = 0
+        M_x = -Q_p
+        M_y = 0
+        M_z = 0
+        return np.array([f_x, f_y, f_z, M_x, M_y, M_z])
     
     def get_forces(self, t, x_rk4_history):
         # For simulation, you might eventually add wind and controller effects.
         # For now, we simply call get_aero_forces with zeros.
         wind = np.array([0, 0, 0])  # In body frame
         deflections = np.array([0, 0, 0])
-        
 
         U = self.get_aero_forces(x_rk4_history[-1], wind, deflections) #+thrust
+        print(self.gravity)
+        if self.gravity:
+            U += self.get_gravity(x_rk4_history[-1])
+        U += self.get_thrust(0, 0)  # future: get_thrust(T_p, Q_p)
         return U
 
     def simulate(self, x0, t_start, t_stop, dt=0.1):

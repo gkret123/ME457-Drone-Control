@@ -23,9 +23,9 @@ import plot_results as pr
 
 
 class rigid_body:
-    def __init__(self, parameters, gravity=False):        
+    def __init__(self, parameters):        
         self.__dict__.update(parameters.__dict__)
-        self.gravity = gravity
+        #self.gravity = gravity
     
     def euler2rot(self, phi, theta, psi):
         R_01 = np.array([[np.cos(psi), -np.sin(psi), 0],
@@ -159,7 +159,7 @@ class rigid_body:
                 U_temp = U(t, x_rk4_history)
             else:
                 U_temp = U
-            if self.gravity:
+            """if self.gravity:
                 # Get the Euler angles from the current state (phi, theta, psi)
                 current_state = x_rk4_history[-1]
                 phi = current_state[6]
@@ -173,7 +173,7 @@ class rigid_body:
                 # Transform gravity into the body frame:
                 g_body = R_0b.T @ g_inertial
                 # Add the gravitational force in the body frame:
-                U_temp[0:3] += self.mass * g_body
+                U_temp[0:3] += self.mass * g_body"""
 
             x_rk4 = rk4_integrator.step(t, x_rk4, U_temp)
             t += dt
