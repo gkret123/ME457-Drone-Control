@@ -88,7 +88,7 @@ class MavDynamics(MavDynamicsForces):
         :param delta: np.matrix(delta_a, delta_e, delta_r, delta_t)
         :return: Forces and Moments on the UAV np.matrix(Fx, Fy, Fz, Ml, Mn, Mm)
         """
-        ##### TODO ######
+       
         # extract states (phi, theta, psi, p, q, r)
         u = self._state[3]
         v = self._state[4]
