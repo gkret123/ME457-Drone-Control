@@ -126,7 +126,7 @@ class MavDynamics(MavDynamicsForces):
         # Quadratic formula to solve for motor speed
         a = MAV.C_Q0 * MAV.rho * np.power(MAV.D_prop , 5)/((2.* np.pi)**2)
         b = (MAV.C_Q1 * MAV.rho * np.power(MAV.D_prop , 4) / (2. * np.pi )) * self._Va + MAV.KQ**2/MAV.R_motor
-        c = MAV.C_Q2 * MAV.rho * np.power (MAV.D_prop , 3) * self.Va**2 - (MAV.KQ / MAV.R_motor) * V_in + MAV.KQ * MAV.i0
+        c = MAV.C_Q2 * MAV.rho * np.power (MAV.D_prop , 3) * self._Va**2 - (MAV.KQ / MAV.R_motor) * V_in + MAV.KQ * MAV.i0
 
         # Consider only positive root
         Omega_op = (-b + np.sqrt(b**2-4*a*c)) / (2.* a )
