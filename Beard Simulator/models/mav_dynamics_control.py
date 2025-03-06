@@ -109,7 +109,13 @@ class MavDynamics(MavDynamicsForces):
         # compute lateral torques in body frame (Mx, Mz)
         l = 0.5 * MAV.rho * self._Va**2 * MAV.S_wing * MAV.b * (MAV.C_ell_0 + MAV.C_ell_beta * self._beta + MAV.C_ell_p * MAV.b * p / (2 * self._Va) + MAV.C_ell_r * MAV.b * r / (2 * self._Va) + MAV.C_ell_delta_a * delta.aileron + MAV.C_ell_delta_r * delta.rudder)
         n = 0.5 * MAV.rho * self._Va**2 * MAV.S_wing * MAV.b * (MAV.C_n_0 + MAV.C_n_beta * self._beta + MAV.C_n_p * MAV.b * p / (2 * self._Va) + MAV.C_n_r * MAV.b * r / (2 * self._Va) + MAV.C_n_delta_a * delta.aileron + MAV.C_n_delta_r * delta.rudder)
-        forces_moments = np.array([[np.array([f_x + thrust_prop]), f_y, np.array([f_z]), l - torque_prop, m, n]]).T
+        
+        f_x += thrust_prop + fg[0]
+        f_y += fg[1]
+        f_z += fg[2]
+        l -= torque_prop
+
+        forces_moments = np.array([f_x, f_y, f_z, l, m, n]).T
         return forces_moments
 
     def _motor_thrust_torque(self, Va, delta_t):
