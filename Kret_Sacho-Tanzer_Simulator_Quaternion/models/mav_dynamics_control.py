@@ -191,7 +191,7 @@ def main():
     # Initialize history lists for time and state.
     time_array = []
     state_array = []
-    
+     
     # Simulation loop.
     while sim_time < sim_end_time:
         # Update the model.
