@@ -1,5 +1,5 @@
 import numpy as np
-from tools.rotations import euler_to_quaternion
+from tools.rotations import euler_to_quaternion, quaternion_to_euler
 
 ######################################################################################
                 #   Initial Conditions
