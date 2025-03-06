@@ -126,6 +126,7 @@ class MavDynamics:
         u_dot = np.array([[r*v - q*w + fx/MAV.mass]]).T
         v_dot = np.array([[p*w - r*u + fy/MAV.mass]]).T
         w_dot = np.array([[q*u - p*v + fz/MAV.mass]]).T
+        
         # rotational kinematics
         e0_dot, e1_dot, e2_dot, e3_dot = 0.5 * np.array([[0, -p, -q, -r],
                                                         [p, 0, r, -q],
@@ -134,25 +135,37 @@ class MavDynamics:
 
 
         # rotatonal dynamics
-        T = self.J_xx * self.J_zz - self.J_xz**2
-        T1 = self.J_xz*(self.J_xx - self.J_yy + self.J_zz)/T
-        T2 = (self.J_zz*(self.J_zz - self.J_yy) + self.J_xz**2)/T
-        T3 = self.J_zz/T
-        T4 = self.J_xz/T
-        T5 = (self.J_zz-self.J_xx)/self.J_yy
-        T6 = self.J_xz/self.J_yy
-        T7 = ((self.J_xx - self.J_yy)*self.J_xx+self.J_xz**2)/T
-        T8 = self.J_xx/T
+        T = MAV.Jx * MAV.Jz - MAV.Jxz**2
+        T1 = MAV.Jxz*(MAV.Jx - MAV.Jy + MAV.Jz)/T
+        T2 = (MAV.Jz*(MAV.Jz - MAV.Jy) + MAV.Jxz**2)/T
+        T3 = MAV.Jz/T
+        T4 = MAV.Jxz/T
+        T5 = (MAV.Jz-MAV.Jx)/MAV.Jy
+        T6 = MAV.Jxz/MAV.Jy
+        T7 = ((MAV.Jx - MAV.Jy)*MAV.Jx+MAV.Jxz**2)/T
+        T8 = MAV.Jx/T
         
         p_dot, q_dot, r_dot =  np.array([[T1*p*q - T2*q*r],
                     [T5*p*r - T6*(p**2 - r**2)],
                     [T7*p*q - T1*q*r]]) +      np.array([[T3*l + T4*n],
-                                                [1/self.J_yy*m],
+                                                [1/MAV.Jy*m],
                                                 [T4*l + T8*n]])
         
 
-        # collect the derivative of the states
-        x_dot = np.array([[north_dot, east_dot, down_dot, u_dot, v_dot, w_dot, e0_dot, e1_dot, e2_dot, e3_dot,p_dot, q_dot,r_dot]]).T
+        # collect the derivative of the states and convert to scalars
+        x_dot = np.array([[north_dot.item()],
+                           [east_dot.item()],
+                           [down_dot.item()],
+                           [u_dot.item()],
+                           [v_dot.item()],
+                           [w_dot.item()],
+                           [e0_dot.item()],
+                           [e1_dot.item()],
+                           [e2_dot.item()],
+                           [e3_dot.item()],
+                           [p_dot.item()],
+                           [q_dot.item()],
+                           [r_dot.item()]])
         #x_dot = np.array([[0,0,0,0,0,0,0,0,0,0,0,0,0]]).T
         return x_dot
 
