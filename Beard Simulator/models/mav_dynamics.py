@@ -13,6 +13,9 @@ mavsim_python
 
 import numpy as np
 # load message types
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from message_types.msg_state import MsgState
 import parameters.aerosonde_parameters as MAV
