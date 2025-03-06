@@ -38,7 +38,6 @@ from tools.rotations import quaternion_to_rotation, quaternion_to_euler
 
 class MavDynamics:
     def __init__(self, Ts):
-        # store time step for dynamics
         self._ts_simulation = Ts
         # set initial states based on parameter file
         # _state is the 13x1 internal state of the aircraft that is being propagated:
