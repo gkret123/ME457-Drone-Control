@@ -147,8 +147,8 @@ class Aircraft(rigid_body):
         # Transform drag and lift from the stability frame to body frame:
         # In the stability frame, drag acts opposite to the relative wind and lift is perpendicular.
         # Here we rotate by alpha to obtain the body-frame components.
-        f_x, f_z = np.array([[np.cos(alpha), np.sin(alpha)],
-                              [-np.sin(alpha),  np.cos(alpha)]]) @ np.array([-F_drag, -F_lift])# - [-12.43/2,0]
+        f_x, f_z = np.array([[np.cos(alpha), -np.sin(alpha)],
+                              [np.sin(alpha),  np.cos(alpha)]]) @ np.array([-F_drag, -F_lift])# - [-12.43/2,0]
         print(f"Drag: {F_drag}, Lift: {F_lift}")
         print(f"Drag in body frame: {f_x}, Lift in body frame: {f_z}")
         # Lateral forces:
@@ -165,10 +165,11 @@ class Aircraft(rigid_body):
             self.C_n_r * b * r / (2 * V_a_mag) + self.C_n_delta_a * delta_a +
             self.C_n_delta_r * delta_r)
         
-        M_x, M_z = np.array([[np.cos(beta), np.sin(beta)],
+        """M_x, M_z = np.array([[np.cos(beta), np.sin(beta)],
                               [-np.sin(beta),  np.cos(beta)]]) @ np.array([l, n])#  - [-0.49879620097737787 , 0]
 
-        return np.array([f_x, f_y, f_z, M_x, m, M_z])
+        return np.array([f_x, f_y, f_z, M_x, m, M_z])"""
+        return np.array([f_x, f_y, f_z, l, m, n])
     
     def get_gravity(self, state):
         # --- NEW: Include gravity by transforming the inertial gravity vector to the body frame ---
@@ -207,8 +208,7 @@ class Aircraft(rigid_body):
         wind = np.array([0, 0, 0])  # In body frame
         deflections = np.array([0, 0, 0])
 
-        U = self.get_aero_forces(x_rk4_history[-1], wind, deflections) #+thrust
-        print(self.gravity)
+        U = self.get_aero_forces(x_rk4_history[-1], wind, deflections)
         if self.gravity:
             U += self.get_gravity(x_rk4_history[-1])
         U += self.get_thrust(0, 0)  # future: get_thrust(T_p, Q_p)

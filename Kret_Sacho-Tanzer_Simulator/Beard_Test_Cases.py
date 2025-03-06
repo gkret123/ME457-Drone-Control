@@ -3,6 +3,23 @@ from Aircraft import Aircraft as ac
 from scipy.spatial.transform import Rotation as R
 import Parameters_Test as p
 
+def quaternion_to_euler(quaternion):  # from Beard
+    """
+    converts a quaternion attitude to an euler angle attitude
+    :param quaternion: the quaternion to be converted to euler angles in a np.matrix
+    :return: the euler angle equivalent (phi, theta, psi) in a np.array
+    """
+    e0 = quaternion.item(0)
+    e1 = quaternion.item(1)
+    e2 = quaternion.item(2)
+    e3 = quaternion.item(3)
+    phi = np.arctan2(2.0 * (e0 * e1 + e2 * e3), e0**2.0 + e3**2.0 - e1**2.0 - e2**2.0)
+    # theta = np.arcsin(2.0 * (e0 * e2 - e1 * e3))
+    theta = -np.pi/2.0 + np.arctan2(np.sqrt(1+2.0*(e0*e2-e1*e3)), np.sqrt(1-2.0*(e0*e2-e1*e3)))
+    psi = np.arctan2(2.0 * (e0 * e3 + e1 * e2), e0**2.0 + e1**2.0 - e2**2.0 - e3**2.0)
+    return phi, theta, psi
+
+
 ##### Case 1 ######
 
 
@@ -108,8 +125,18 @@ throttle = 1.
 quaternion = [2.47421558e-01, 6.56821468e-02, 2.30936730e-01, 9.38688796e-01]
 rotation = R.from_quat(quaternion)
 euler = rotation.as_euler('ZYX', degrees=False)
-print(f"Euler Angles: {euler}")
 
+print(f"Euler Angles: {euler}")
+"""
+quaternion = np.array([[ 9.38688796e-01],
+[ 2.47421558e-01],
+[ 6.56821468e-02],
+[ 2.30936730e-01]]).flatten()
+
+euler = quaternion_to_euler(quaternion)
+
+print(f"Euler Angles: {euler}")
+"""
 state = np.array([[ 6.19506532e+01],
  [ 2.22940203e+01],
  [-1.10837551e+02],
