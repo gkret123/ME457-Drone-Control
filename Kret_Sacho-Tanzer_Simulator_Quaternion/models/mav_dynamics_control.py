@@ -67,7 +67,7 @@ class MavDynamics(MavDynamicsForces):
 
         ##### TODO #####
         # convert steady-state wind vector from world to body frame
-        # wind_body = 
+        # wind_body =  
         # add the gust 
         # wind_body += 
         # convert total wind to world frame
