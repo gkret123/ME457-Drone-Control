@@ -2,13 +2,11 @@
 mavDynamics 
     - this file implements the dynamic equations of motion for MAV
     - use unit quaternion for the attitude state
+    - MavDynamics_control -> Aerodynamics
     
-mavsim_python
-    - Beard & McLain, PUP, 2012
-    - Update history:  
-        2/24/2020 - RWB
 """
 import numpy as np
+#mav dynamics is the equivlent of rigid body
 from models.mav_dynamics import MavDynamics as MavDynamicsForces
 # load message types
 from message_types.msg_state import MsgState
@@ -16,15 +14,18 @@ from message_types.msg_delta import MsgDelta
 import parameters.aerosonde_parameters as MAV
 from tools.rotations import quaternion_to_rotation, quaternion_to_euler
 
-
+#
 class MavDynamics(MavDynamicsForces):
+    
     def __init__(self, Ts):
         super().__init__(Ts)
         # store wind data for fast recall since it is used at various points in simulation
         self._wind = np.array([[0.], [0.], [0.]])  # wind in NED frame in meters/sec
         # store forces to avoid recalculation in the sensors function
         self._forces = np.array([[0.], [0.], [0.]])
+        #may need to update in the future
         self._Va = MAV.u0
+        #AoA and sideslip
         self._alpha = 0
         self._beta = 0
         # update velocity data and forces and moments
@@ -54,6 +55,7 @@ class MavDynamics(MavDynamicsForces):
     ###################################
     # private functions
     def _update_velocity_data(self, wind=np.zeros((6,1))):
+    
         steady_state = wind[0:3]
         gust = wind[3:6]
 
@@ -119,30 +121,23 @@ class MavDynamics(MavDynamicsForces):
         return forces_moments
 
     def _motor_thrust_torque(self, Va, delta_t):
-        # compute thrust and torque due to propeller
-        ##### TODO #####
-        # map delta_t throttle command(0 to 1) into motor input voltage
-        # v_in =
-
-        # Angular speed of propeller (omega_p = ?)
-
-        # thrust and torque due to propeller
-        # map d e l t a t t h r o t t l e command(0 t o 1) i n t o motor i n p u t v o l t a g e
+        # compute thrust and torque due to propeller from slides ch 4
+        #map 0-1 throttle to voltage
         V_in = MAV.V_max * delta_t
         # Quadratic formula to solve for motor speed
         a = MAV.C_Q0 * MAV.rho * np.power(MAV.D_prop , 5)/((2.* np.pi)**2)
         b = (MAV.C_Q1 * MAV.rho * np.power(MAV.D_prop , 4) / (2. * np.pi )) * self._Va + MAV.KQ**2/MAV.R_motor
         c = MAV.C_Q2 * MAV.rho * np.power (MAV.D_prop , 3) * self._Va**2 - (MAV.KQ / MAV.R_motor) * V_in + MAV.KQ * MAV.i0
 
-        # Consider only positive root
+        # Consider only positive root for Omega
         Omega_op = (-b + np.sqrt(b**2-4*a*c)) / (2.* a )
 
-        # compute advance ratio
+        # compute advance ratio,
         J_op = 2 * np.pi * self._Va/(Omega_op * MAV.D_prop)
-        # compute nond imens ional ized c o e f f i c i e n t s of thrus t and torque
+        # compute dimentionless coefficients of thrust and torque
         C_T = MAV.C_T2 * J_op ** 2 + MAV.C_T1 * J_op + MAV.C_T0
         C_Q = MAV.C_Q2 * J_op **2 + MAV.C_Q1 * J_op + MAV.C_Q0
-        # add thrus t and torque due to pr o peller
+        # add thrust and torque due to propeller
         n = Omega_op / (2 * np.pi)
         thrust_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 4) * C_T
         torque_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 5) * C_Q
