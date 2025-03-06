@@ -1,22 +1,37 @@
 """
+ME-457 Drone COntrol
+Spring 2025
+
+@author: Adin Sacho-Tanzer & Gabriel Kret
+The Propeller Heads
+
+
 mavDynamics 
-    - this file implements the dynamic equations of motion for MAV
+    - this file implements the EOMs (Equivlent to EOMs_main in Euler Implementation)
     - use unit quaternion for the attitude state
-    
-mavsim_python
-    - Beard & McLain, PUP, 2012
-    - Update history:  
-        2/24/2020 - RWB
-        7/13/2023 - RWB
-        1/17/2024 - RWB
+    - the conversion from Euler angles to quaternions can be handled at any time in the event we need to start working in euler angles
+    - the state of the MAV is defined as:
+        pn - North position in meters
+        pe - East position in meters
+        pd - Down position in meters
+        u - velocity along body x-axis in meters/sec
+        v - velocity along body y-axis in meters/sec
+        w - velocity along body z-axis in meters/sec
+        e0 - quaternion e0
+        e1 - quaternion e1
+        e2 - quaternion e2
+        e3 - quaternion e3
+        p - body frame roll rate in radians/sec
+        q - body frame pitch rate in radians/sec
+        r - body frame yaw rate in radians/sec
 """
 
 import numpy as np
-# load message types
+#needed to add this the manage the path and import other files properly
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+# load message types
 from message_types.msg_state import MsgState
 import parameters.aerosonde_parameters as MAV
 from tools.rotations import quaternion_to_rotation, quaternion_to_euler
@@ -90,9 +105,7 @@ class MavDynamics:
     def _f(self, state, forces_moments):
         """
         for the dynamics xdot = f(x, u), returns f(x, u)
-        """
-        ##### TODO #####
-        
+        """        
         # Extract the States
         north = state.item(0)
         east = state.item(1)
@@ -117,7 +130,6 @@ class MavDynamics:
         n = forces_moments.item(5)
 
         # Position Kinematics
-
         north_dot, east_dot, down_dot = np.array([[(e1**2 + e0**2 - e2**2 - e3**2), 2*(e1*e2 - e3*e0), 2*(e1*e3 + e2*e0)],
                            [2*(e1*e2 + e3*e0), (e2**2 + e0**2 - e1**2 - e3**2), 2*(e2*e3 - e1*e0)],
                             [2*(e1*e3 - e2*e0), 2*(e2*e3 +e1*e0), (e3**2 + e0**2 - e1**2 - e2**2)]]) @ np.array([[u, v, w]]).T
