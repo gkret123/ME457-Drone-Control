@@ -82,6 +82,7 @@ class MavDynamics(MavDynamicsForces):
         self._alpha = np.arctan2(V_ba[2], V_ba[0])
         # compute sideslip angle (self._beta = ?)
         self._beta = np.arctan2(V_ba[1], np.sqrt(V_ba[0]**2 + V_ba[2]**2))
+        
     def _forces_moments(self, delta):
         """
         return the forces on the UAV based on the state, wind, and control surfaces
