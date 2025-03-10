@@ -60,6 +60,7 @@ class MavDynamics(MavDynamicsForces):
 
     ###################################
     # private functions
+    # WIND
     def _update_velocity_data(self, wind=np.zeros((6,1))):
     
         steady_state = wind[0:3]
