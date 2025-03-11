@@ -82,5 +82,16 @@ def compute_trim(mav, Va, gamma):
 def trim_objective_fun(x, mav, Va, gamma):
     # objective function to be minimized
     ##### TODO #####
-    J = 0
+    state = x[0:13]
+    delta = MsgDelta(elevator=x.item(13),
+                     aileron=x.item(14),
+                     rudder=x.item(15),
+                     throttle=x.item(16))
+    desired_trim_state_dot = np.array([[0, 0, -Va*np.sin(gamma), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]).T
+    mav._state = state
+    mav._update_velocity_data()
+    forces_moments = mav._forces_moments(delta)
+    f = mav.derivatives(state, forces_moments)
+    tmp = f - desired_trim_state_dot
+    J = np.linalg.norm(tmp[2:13])**2
     return J
