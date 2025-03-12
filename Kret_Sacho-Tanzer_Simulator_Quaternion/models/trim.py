@@ -91,7 +91,7 @@ def trim_objective_fun(x, mav, Va, gamma):
     mav._state = state
     mav._update_velocity_data()
     forces_moments = mav._forces_moments(delta)
-    f = mav.derivatives(state, forces_moments)
+    f = mav._f(state, forces_moments)
     tmp = f - desired_trim_state_dot
     J = np.linalg.norm(tmp[2:13])**2
     return J
