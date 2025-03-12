@@ -35,25 +35,27 @@ def compute_trim(mav, Va, gamma):
                    [0.], # q
                    [0.]  # r
                    ])"""
-    state0 = np.array([[0],  # pn
+    """state0 = np.array([[0],  # pn
                    [0],  # pe
                    [0],  # pd
                    [0],  # u
                    [0.], # v
                    [0.], # w
-                   [e0[0]],  # e0
-                   [e0[1]],  # e1
-                   [e0[2]],  # e2
-                   [e0[3]],  # e3
+                   [e0[0,0]],  # e0
+                   [e0[1,0]],  # e1
+                   [e0[2,0]],  # e2
+                   [e0[3,0]],  # e3
                    [0.], # p
                    [0.], # q
                    [0.]  # r
-                   ])
+                   ])"""
+    state0 = np.array([[0.000000, -0.000000, -100.000000, 24.968743, 0.000000, 1.249755, 0.999687, 0.000000, 0.025003, 0.000000, 0.000000, 0.000000, 0.000000]]).T
     # state0 = mav._state
     delta0 = np.array([[0],  # elevator
                        [0],  # aileron
                        [0],  # rudder
                        [0]]) # throttle
+    
     x0 = np.concatenate((state0, delta0), axis=0)
     # define equality constraints
     cons = ({'type': 'eq',
@@ -80,7 +82,7 @@ def compute_trim(mav, Va, gamma):
              })
     # solve the minimization problem to find the trim states and inputs
 
-    res = minimize(trim_objective_fun, x0, method='SLSQP', args=(mav, Va, gamma),
+    res = minimize(trim_objective_fun, x0.flatten(), method='SLSQP', args=(mav, Va, gamma),
                    constraints=cons, 
                    options={'ftol': 1e-10, 'disp': True})
     # extract trim state and input and return
