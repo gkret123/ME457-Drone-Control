@@ -131,6 +131,7 @@ class MavDynamics(MavDynamicsForces):
     def _motor_thrust_torque(self, Va, delta_t):
         # compute thrust and torque due to propeller from slides ch 4
         #map 0-1 throttle to voltage
+        delta_t = np.clip(delta_t, 0, 1)  # clip throttle to 0, 1
         V_in = MAV.V_max * delta_t
         # Quadratic formula to solve for motor speed
         a = MAV.C_Q0 * MAV.rho * np.power(MAV.D_prop , 5)/((2.* np.pi)**2)

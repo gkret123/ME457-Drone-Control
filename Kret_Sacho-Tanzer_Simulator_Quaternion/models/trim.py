@@ -21,10 +21,10 @@ def compute_trim(mav, Va, gamma):
     ##### TODO #####
     # set the initial conditions of the optimization
     e0 = euler_to_quaternion(0., gamma, 0.)
-    """state0 = np.array([[0],  # pn
+    state0 = np.array([[0],  # pn
                    [0],  # pe
                    [0],  # pd
-                   [0],  # u
+                   [20],  # u
                    [0.], # v
                    [0.], # w
                    [1],  # e0
@@ -34,7 +34,7 @@ def compute_trim(mav, Va, gamma):
                    [0.], # p
                    [0.], # q
                    [0.]  # r
-                   ])"""
+                   ])
     """state0 = np.array([[0],  # pn
                    [0],  # pe
                    [0],  # pd
@@ -49,12 +49,12 @@ def compute_trim(mav, Va, gamma):
                    [0.], # q
                    [0.]  # r
                    ])"""
-    state0 = np.array([[0.000000, -0.000000, -100.000000, 24.968743, 0.000000, 1.249755, 0.999687, 0.000000, 0.025003, 0.000000, 0.000000, 0.000000, 0.000000]]).T
+    # state0 = np.array([[0.000000, -0.000000, -100.000000, 24.968743, 0.000000, 1.249755, 0.999687, 0.000000, 0.025003, 0.000000, 0.000000, 0.000000, 0.000000]]).T
     # state0 = mav._state
     delta0 = np.array([[0],  # elevator
                        [0],  # aileron
                        [0],  # rudder
-                       [0]]) # throttle
+                       [0.5]]) # throttle
     
     x0 = np.concatenate((state0, delta0), axis=0)
     # define equality constraints

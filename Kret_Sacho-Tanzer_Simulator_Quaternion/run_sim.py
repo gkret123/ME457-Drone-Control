@@ -11,9 +11,9 @@ from message_types.msg_delta import MsgDelta
 from models.trim import compute_trim
 
 # initialize the mav
-mav = MavDynamics(SIM.ts_simulation)
+mav_temp = MavDynamics(SIM.ts_simulation)
 
-trim_state, trim_input = compute_trim(mav, 25., 5.*np.pi/180.)  # compute the trim conditions
+# trim_state, trim_input = compute_trim(mav_temp, 25., 5.*np.pi/180.)  # compute the trim conditions
 
 
 
@@ -24,14 +24,22 @@ Ts = 0.01
 sim_end_time = 100.0
 mav = MavDynamics(Ts)
 wind = np.array([[0.], [0.], [0.], [0], [0], [0]])
-delta = trim_input
+# delta = trim_input
 
 # Initialize history lists for time and state.
 time_array = []
 state_array = []
-    
+
+trim_state, trim_input = compute_trim(mav_temp, 25., 2.*np.pi/180.)  # compute the trim conditions
+delta = trim_input
+
 # Simulation loop.
 while sim_time < sim_end_time:
+    # print(f"Elevator: {delta.elevator} Aileron: {delta.aileron} Rudder: {delta.rudder} Throttle: {delta.throttle}")
+    # if sim_time.is_integer() and sim_time % 10 == 0:  # every 10 seconds update control inputs
+        # mav_temp = MavDynamics(SIM.ts_simulation)
+        
+    
     # Update the model.
     mav.update(delta, wind)
     
