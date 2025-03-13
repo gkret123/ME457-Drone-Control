@@ -33,10 +33,13 @@ t_history = [0]
 y_history = [0]
 u_history = [0]
 
-r = 1
+r = 0
 y = 0
 t = 0
+r_history = [r]
 for i in range(P.nsteps):
+    r = np.sin(i/10)
+    r_history.append(r)
     u = controller.update(r, y) 
     y = system.update(u) 
     t += P.Ts
@@ -49,7 +52,9 @@ for i in range(P.nsteps):
 fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
 
 # Plot response y due to step change in r
-ax1.plot(t_history, y_history)
+ax1.plot(t_history, y_history, label = "y")
+ax1.plot(t_history, r_history, label = "r")
+ax1.set_xlabel('Time [s]')
 ax1.set_ylabel('Response')
 ax1.set_title('Response due to step change in setpoint')
 ax1.grid()
@@ -61,5 +66,6 @@ ax2.set_ylabel('Actuation Signal')
 ax2.set_title('Actuation Signal')
 ax2.grid()
 
+plt.legend()
 plt.tight_layout()
 plt.show()

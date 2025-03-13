@@ -15,5 +15,5 @@ zeta = 0.7
 kp = 0.9*umax/emax
 wn = (1 + K*kp)/(2*tau*zeta)
 ki = wn**2 * tau / K
-kd = 0
+kd = 0.01
 sigma = 0.01
