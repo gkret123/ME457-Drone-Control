@@ -20,17 +20,17 @@ def compute_trim(mav, Va, gamma):
 
     ##### TODO #####
     # set the initial conditions of the optimization
-    e0 = euler_to_quaternion(0., gamma, 0.)
+    e = euler_to_quaternion(0., gamma, 0.)
     state0 = np.array([[0],  # pn
                    [0],  # pe
                    [0],  # pd
-                   [20],  # u
+                   [Va],  # u
                    [0.], # v
                    [0.], # w
-                   [1],  # e0
-                   [0],  # e1
-                   [0],  # e2
-                   [0],  # e3
+                   [e[0,0]],  # e0
+                   [e[1,0]],  # e1
+                   [e[2,0]],  # e2
+                   [e[3,0]],  # e3
                    [0.], # p
                    [0.], # q
                    [0.]  # r

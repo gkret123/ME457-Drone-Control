@@ -9,19 +9,15 @@ from plotter.plot_results import plot_results
 import parameters.simulation_parameters as SIM
 from message_types.msg_delta import MsgDelta
 from models.trim import compute_trim
-
-# initialize the mav
-mav_temp = MavDynamics(SIM.ts_simulation)
-
-# trim_state, trim_input = compute_trim(mav_temp, 25., 5.*np.pi/180.)  # compute the trim conditions
-
+from tools.rotations import euler_to_quaternion
 
 
 # Initialize the model, wind, and control inputs.
     # Simulation settings.
+
 sim_time = 0.0
 Ts = 0.01
-sim_end_time = 100.0
+sim_end_time = 10.0
 mav = MavDynamics(Ts)
 wind = np.array([[0.], [0.], [0.], [0], [0], [0]])
 # delta = trim_input
@@ -30,8 +26,34 @@ wind = np.array([[0.], [0.], [0.], [0], [0], [0]])
 time_array = []
 state_array = []
 
-trim_state, trim_input = compute_trim(mav_temp, 25., 2.*np.pi/180.)  # compute the trim conditions
+
+# initialize a temporary mav to calculate trim
+mav_temp = MavDynamics(SIM.ts_simulation)
+
+
+Va  = 30
+gamma = np.deg2rad(15)
+
+trim_state, trim_input = compute_trim(mav_temp, Va, gamma)  # compute the trim conditions
 delta = trim_input
+
+e = euler_to_quaternion(0., gamma, 0.)
+state0 = np.array([[0],  # pn
+            [0],  # pe
+            [0],  # pd
+            [Va],  # u
+            [0.], # v
+            [0.], # w
+            [e[0,0]],  # e0
+            [e[1,0]],  # e1
+            [e[2,0]],  # e2
+            [e[3,0]],  # e3
+            [0.], # p
+            [0.], # q
+            [0.]  # r
+            ])
+
+mav._state = state0
 
 # Simulation loop.
 while sim_time < sim_end_time:
