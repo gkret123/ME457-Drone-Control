@@ -62,14 +62,60 @@ class Autopilot:
                         limit=1.0)
         self.commanded_state = MsgState()
 
+    def saturate(self, input, low_limit, up_limit):
+        if input <= low_limit:
+            output = low_limit
+        elif input >= up_limit:
+            output = up_limit
+        else:
+            output = input
+        return output
+    
     def update(self, cmd, state):
 	
 	#### TODO #####
         # lateral autopilot
-    
+        errorAirspeed = state.Va - cmd.airspeed_command
+        chi_c = wrap(cmd.course_command, state.chi)
+        errorCourse = self.saturate(state.chi - chi_c, -np.radians(15), np.radians(15))
+        self.integratorCourse = self.integratorCourse + (self.Ts/2) * (errorCourse + self.errorCourseD1)
+        self.errorCourseD1 = errorCourse
+        xLat = np.array([[errorAirspeed * np.sin(state.beta)],  # v
+                    [state.p],
+                    [state.r],
+                    [state.phi],
+                    [errorCourse],
+                    [self.integratorCourse]])
+        
+        tmp = -self.Klat @ xLat
+        delta_a = self.saturate(tmp.item(0), -np.radians(30), np.radians(30))
+        delta_r = self.saturate(tmp.item(1), -np.radians(30), np.radians(30))
+
 
         # longitudinal autopilot
+        altitude_c = self.saturate(cmd.altitude_command, 
+                          state.altitude - 0.2*AP.altitude_zone, 
+                          state.altitude + 0.2*AP.altitude_zone)
+    
+        errorAltitude = state.altitude - altitude_c
+        self.integratorAltitude = self.integratorAltitude \
+                                + (self.Ts/2) * (errorAltitude + self.errorAltitudeD1)
+        self.errorAltitudeD1 = errorAltitude
+        self.integratorAirspeed = self.integratorAirspeed \
+                                + (self.Ts/2) * (errorAirspeed + self.errorAirspeedD1)
+        self.errorAirspeedD1 = errorAirspeed
 
+        xLon = np.array([[errorAirspeed * np.cos(state.alpha)],  # u
+                    [errorAirspeed * np.sin(state.alpha)],  # w
+                    [state.q],
+                    [state.theta],
+                    [errorAltitude],
+                    [self.integratorAltitude],
+                    [self.integratorAirspeed]])
+
+        tmp = -self.Klon @ xLon
+        delta_e = self.saturate(tmp.item(0), -np.radians(30), np.radians(30))
+        delta_t = self.saturate(tmp.item(1), 0.0, 1.0)
 
         # construct control outputs and commanded states
         delta = MsgDelta(elevator=0,
@@ -83,11 +129,11 @@ class Autopilot:
         self.commanded_state.chi = 0
         return delta, self.commanded_state
 
-    def saturate(self, input, low_limit, up_limit):
-        if input <= low_limit:
-            output = low_limit
-        elif input >= up_limit:
-            output = up_limit
-        else:
-            output = input
-        return output
+from models.mav_dynamics_control import MavDynamics
+from message_types.msg_autopilot import MsgAutopilot
+
+AP = Autopilot(0.01)
+MAV = MavDynamics(0.01)
+state = MsgState()
+cmd = MsgAutopilot()
+print(AP.update(cmd, state))
