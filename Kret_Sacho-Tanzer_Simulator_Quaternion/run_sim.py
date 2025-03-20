@@ -32,9 +32,16 @@ mav_temp = MavDynamics(SIM.ts_simulation)
 
 
 Va  = 30
-gamma = np.deg2rad(15)
+gamma = np.deg2rad(0)
 
 trim_state, trim_input = compute_trim(mav_temp, Va, gamma)  # compute the trim conditions
+
+mav_temp = MavDynamics(SIM.ts_simulation)
+
+print(mav_temp._f(mav_temp._state, mav_temp._forces_moments(trim_input)))  # shows issue: pdot != 0 (accelerating in roll)
+trim_input.print()
+# quit()
+
 delta = trim_input
 
 e = euler_to_quaternion(0., gamma, 0.)

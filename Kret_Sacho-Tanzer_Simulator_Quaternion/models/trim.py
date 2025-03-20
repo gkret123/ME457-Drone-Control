@@ -35,6 +35,7 @@ def compute_trim(mav, Va, gamma):
                    [0.], # q
                    [0.]  # r
                    ])
+    # state0 = np.array([[ 2.91025105e1], [ 0.00000000e0], [-7.28312311e0], [-3.53903030e3], [ 7.74527245e4], [-1.27640129e4], [ 0.00000000e0], [ 0.00000000e0], [ 0.00000000e0], [ 0.00000000e0], [ 1.55219963e0], [ 0.00000000e0], [ 1.06244932e1]])
     """state0 = np.array([[0],  # pn
                    [0],  # pe
                    [0],  # pd
@@ -51,9 +52,9 @@ def compute_trim(mav, Va, gamma):
                    ])"""
     # state0 = np.array([[0.000000, -0.000000, -100.000000, 24.968743, 0.000000, 1.249755, 0.999687, 0.000000, 0.025003, 0.000000, 0.000000, 0.000000, 0.000000]]).T
     # state0 = mav._state
-    delta0 = np.array([[0],  # elevator
-                       [0],  # aileron
-                       [0],  # rudder
+    delta0 = np.array([[0.],  # elevator
+                       [0.],  # aileron
+                       [0.],  # rudder
                        [0.5]]) # throttle
     
     x0 = np.concatenate((state0, delta0), axis=0)
