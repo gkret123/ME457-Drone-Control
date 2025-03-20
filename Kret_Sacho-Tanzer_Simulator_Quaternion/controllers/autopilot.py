@@ -106,15 +106,3 @@ class Autopilot:
         self.commanded_state.theta = 0
         self.commanded_state.chi = 0
         return delta, self.commanded_state
-
-from models.mav_dynamics_control import MavDynamics
-from message_types.msg_autopilot import MsgAutopilot
-
-AutoP = Autopilot(0.01)
-MAV = MavDynamics(0.01)
-state = MsgState()
-cmd = MsgAutopilot()
-delta, state = AutoP.update(cmd, state)
-delta.print()
-
-

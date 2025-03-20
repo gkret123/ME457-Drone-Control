@@ -64,7 +64,10 @@ class MavDynamics(MavDynamicsForces):
     def _update_velocity_data(self, wind=np.zeros((6,1))):
     
         steady_state = wind[0:3]
-        gust = wind[3:6]
+        if len(wind) == 6:
+            gust = wind[3:6]
+        else:
+            gust = np.zeros((3,1))
 
         ##### TODO: CHECK CHECK CHECK #####
         # convert steady-state wind vector from world to body frame

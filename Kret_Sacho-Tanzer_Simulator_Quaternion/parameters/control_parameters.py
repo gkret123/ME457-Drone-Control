@@ -6,7 +6,7 @@ import parameters.aerosonde_parameters as MAV
 #### TODO #####
 gravity = MAV.gravity  # gravity constant
 Va0 = 25 # TF.Va_trim
-rho = 0 # density of air
+rho = 1.293 # kg/m3 # density of air (From google)
 sigma = 0  # low pass filter gain for derivative
 
 #----------roll loop-------------
