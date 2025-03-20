@@ -33,8 +33,8 @@ MAV = MavDynamics(0.01)
 state = MsgState()
 cmd = MsgAutopilot()
 cmd.airspeed_command = 25  # commanded airspeed m/s
-cmd.course_command = 0.1  # commanded course angle in rad
-cmd.altitude_command = 25  # commanded altitude in m
+cmd.course_command = 0.0  # commanded course angle in rad
+cmd.altitude_command = 0.0  # commanded altitude in m
 cmd.phi_feedforward = 0.0  # feedforward command for roll angle
 
 
