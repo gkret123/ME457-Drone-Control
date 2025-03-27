@@ -159,8 +159,12 @@ def df_dx(mav, x_euler, delta):
     # take partial of f_euler with respect to x_euler
     eps = 0.001  # deviation
     A = np.zeros((12, 12))  # Jacobian of f wrt x
-    
-    f_at_x = mav._f()
+    f_at_x = mav._f(x_euler, delta)
+    for i in range(12):
+        x_euler_plus = np.copy(x_euler)
+        x_euler_plus[i][0] += eps
+        f_at_x_plus = mav._f(x_euler_plus, delta)
+        A[:, i] = (f_at_x_plus - f_at_x) / eps #may need to slice by [:,0]
     return A
 
 
