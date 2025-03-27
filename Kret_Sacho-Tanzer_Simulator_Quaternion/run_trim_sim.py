@@ -24,20 +24,12 @@ mav = MavDynamics(Ts)
 wind = np.array([[0.], [0.], [0.]])
 delta = MsgDelta()
 
+mav_temp = MavDynamics(Ts)
+trim_state, trim_input = compute_trim(mav_temp, 25, 0.0)
+print(trim_state)
+trim_input.print()
 
-from models.mav_dynamics_control import MavDynamics
-from message_types.msg_autopilot import MsgAutopilot
-
-AutoP = Autopilot(0.01)
-MAV = MavDynamics(0.01)
-state = MsgState()
-cmd = MsgAutopilot()
-cmd.airspeed_command = 25  # commanded airspeed m/s
-cmd.course_command = 0.3  # commanded course angle in rad
-cmd.altitude_command = 0.0  # commanded altitude in m
-cmd.phi_feedforward = 0.0  # feedforward command for roll angle
-
-
+mav._state = trim_state
 
 # Initialize history lists for time and state.
 time_array = []
@@ -45,12 +37,7 @@ state_array = []
     
 # Simulation loop.
 while sim_time < sim_end_time:
-    # Update the model.
-    state = mav.true_state
-    delta, _ = AutoP.update(cmd, state)
-    delta.print()
-    
-    mav.update(delta, wind)
+    mav.update(trim_input, wind)
     
     # Record current time and state.
     time_array.append(sim_time)
