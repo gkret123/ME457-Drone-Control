@@ -11,37 +11,37 @@ sigma = 1  # low pass filter gain for derivative
 
 #----------roll loop-------------
 # get transfer function data for delta_a to phi
-wn_roll = 0.7
-zeta_roll = 0.7
-roll_kp = 0.7
-roll_kd = 0.7
+wn_roll = 0
+zeta_roll = 0
+roll_kp = 3  # K_u = 8, T_u = 0.2 s
+roll_kd = .6
 
 #----------course loop-------------
-wn_course = 0.7
+wn_course = 1
 zeta_course = 0.7
-course_kp = 0.7
-course_ki = 0.7
+course_kp = 4.5  # K_u = 10, T_u = 1 s
+course_ki = 5.4
 
 #----------yaw damper-------------
-yaw_damper_p_wo = 0.7
-yaw_damper_kr = 0.7
+yaw_damper_p_wo = 1
+yaw_damper_kr = 5
 
 #----------pitch loop-------------
-wn_pitch = 0.7
-zeta_pitch = 0.7 
-pitch_kp = 0.7
-pitch_kd = 0.7
-K_theta_DC = 0.7
+wn_pitch = 0
+zeta_pitch = 0 
+pitch_kp = 1
+pitch_kd = 0.16
+K_theta_DC = 0
 
 #----------altitude loop-------------
-wn_altitude = 0.7
-zeta_altitude = 0.7
-altitude_kp = 0.7
-altitude_ki = 0.7
-altitude_zone = 0.7
+wn_altitude = 0
+zeta_altitude = 0
+altitude_kp = 10
+altitude_ki = 1
+altitude_zone = 10
 
 #---------airspeed hold using throttle---------------
-wn_airspeed_throttle = 0.7
-zeta_airspeed_throttle = 0.7
-airspeed_throttle_kp = 0.7
-airspeed_throttle_ki = 0.7
+wn_airspeed_throttle = 0
+zeta_airspeed_throttle = 0
+airspeed_throttle_kp = 0
+airspeed_throttle_ki = 0
