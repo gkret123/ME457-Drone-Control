@@ -33,13 +33,13 @@ AutoP = Autopilot(0.01)
 new_initial = euler_to_quaternion(0, 0, 0) # inital [phi, theta, psi] in radians
 # throttle can only cope with inital angle of 0.07 rad
 mav._state[6:10] = new_initial
-mav._state[3] = 36  # initial airspeed in m/s
+mav._state[3] = 25  # initial airspeed in m/s
 mav._update_true_state()
 state = MsgState()
 cmd = MsgAutopilot()
 
 
-cmd.airspeed_command = 36  # commanded airspeed m/s
+cmd.airspeed_command = 25  # commanded airspeed m/s
 cmd.course_command = 0#np.pi/8  # commanded course angle in rad
 cmd.altitude_command = -100  # commanded altitude in m
 cmd.phi_feedforward = 0.3 #0.5  # feedforward command for roll angle

@@ -119,4 +119,4 @@ if __name__ == "__main__":
     from models.mav_dynamics_control import MavDynamics
 
     mav = MavDynamics(0.01)
-    trim_state, trim_input = compute_trim(mav, 36, 0.0)
+    trim_state, trim_input = compute_trim(mav, 25, 0.0)
