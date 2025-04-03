@@ -24,24 +24,24 @@ course_ki = 5.4
 
 #----------yaw damper-------------
 yaw_damper_p_wo = 1
-yaw_damper_kr = 5
+yaw_damper_kr = 10
 
 #----------pitch loop-------------
 wn_pitch = 0
 zeta_pitch = 0 
-pitch_kp = 1
+pitch_kp = 5
 pitch_kd = 0.16
-K_theta_DC = 0
+K_theta_DC = 0.5
 
 #----------altitude loop-------------
 wn_altitude = 0
 zeta_altitude = 0
-altitude_kp = 10
-altitude_ki = 1
-altitude_zone = 10
+altitude_kp = 1
+altitude_ki = 0.1
+altitude_zone = 5
 
 #---------airspeed hold using throttle---------------
 wn_airspeed_throttle = 0
 zeta_airspeed_throttle = 0
-airspeed_throttle_kp = 0
-airspeed_throttle_ki = 0
+airspeed_throttle_kp = 10
+airspeed_throttle_ki = 0.1

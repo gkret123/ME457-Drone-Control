@@ -113,3 +113,10 @@ def trim_objective_fun(x, mav, Va, gamma):
     tmp = f - desired_trim_state_dot
     J = np.linalg.norm(tmp[2:13])**2
     return J
+
+
+if __name__ == "__main__":
+    from models.mav_dynamics_control import MavDynamics
+
+    mav = MavDynamics(0.01)
+    trim_state, trim_input = compute_trim(mav, 20, 0.0)
