@@ -14,6 +14,7 @@ from models.trim import compute_trim
 from tools.rotations import euler_to_quaternion, quaternion_to_euler
 from controllers.autopilot import Autopilot
 import plotter.plot_results as plot
+import matplotlib.pyplot as plt
 
 # Initialize the model, wind, and control inputs.
         # Simulation settings.
@@ -30,7 +31,9 @@ from message_types.msg_autopilot import MsgAutopilot
 
 AutoP = Autopilot(0.01)
 new_initial = euler_to_quaternion(0, 0, 0) # inital [phi, theta, psi] in radians
+# throttle can only cope with inital angle of 0.07 rad
 mav._state[6:10] = new_initial
+mav._state[3] = 25  # initial airspeed in m/s
 mav._update_true_state()
 state = MsgState()
 cmd = MsgAutopilot()
@@ -38,19 +41,21 @@ cmd = MsgAutopilot()
 
 cmd.airspeed_command = 25  # commanded airspeed m/s
 cmd.course_command = 0#np.pi/8  # commanded course angle in rad
-cmd.altitude_command = -150  # commanded altitude in m
-cmd.phi_feedforward = 0#0.5  # feedforward command for roll angle
+cmd.altitude_command = -100  # commanded altitude in m
+cmd.phi_feedforward = 10 #0.5  # feedforward command for roll angle
 
 
 # Initialize history lists for time and state.
 time_array = []
 state_array = []
-    
+delta_array = []
+
 # Simulation loop.
 while sim_time < sim_end_time:
     # Update the model.
     state = mav.true_state
     delta, _ = AutoP.update(cmd, state)
+    delta_array.append(delta)
     # delta.print()
     
     mav.update(delta, wind)
@@ -76,5 +81,6 @@ while sim_time < sim_end_time:
     
     #advance timestep
     sim_time += Ts
+
 # Once simulation ends, create the plots using the collected data.
-plot.plot_results(time_array, state_array, title="Final Flight Dynamics")
+plot.plot_results(time_array, state_array, title="Final Flight Dynamics", delta=delta_array)

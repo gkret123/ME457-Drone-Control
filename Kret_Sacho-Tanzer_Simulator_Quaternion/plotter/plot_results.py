@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-def plot_results(t, x, title="Flight Dynamics"):
+def plot_results(t, x, title="Flight Dynamics", delta=None):
     """
     Create static plots for the simulation results.
     t : list or np.array of time values
@@ -13,7 +13,10 @@ def plot_results(t, x, title="Flight Dynamics"):
     t = np.array(t)
     
     # Create 2D plots
-    fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+    if delta is None:
+        fig, axs = plt.subplots(2, 2, figsize=(12, 10))
+    else:
+        fig, axs = plt.subplots(3, 2, figsize=(15, 15))
     fig.suptitle(title)
 
     # Position in NED frame
@@ -70,5 +73,26 @@ def plot_results(t, x, title="Flight Dynamics"):
     ax3d.legend()
     plt.suptitle("3D Position")
     
+    if not (delta is None):
+        aileron_array = []
+        elevator_array = []
+        throttle_array = []
+        rudder_array = []
+        for p in delta:
+            aileron_array.append(p.aileron)
+            elevator_array.append(p.elevator)
+            throttle_array.append(p.throttle)
+            rudder_array.append(p.rudder)
+        # Control inputs
+        axs_controls = axs[2, 0]
+        axs_controls.plot(t, aileron_array, label="Aileron")
+        axs_controls.plot(t, elevator_array, label="Elevator")
+        axs_controls.plot(t, throttle_array, label="Throttle")
+        axs_controls.plot(t, rudder_array, label="Rudder")
+        axs_controls.legend()
+        axs_controls.set_title("Control Inputs")
+        axs_controls.set_xlabel("Time (s)")
+        axs_controls.set_ylabel("Control Input")
+        axs_controls.grid(True)
     # Display the figures
     plt.show()
