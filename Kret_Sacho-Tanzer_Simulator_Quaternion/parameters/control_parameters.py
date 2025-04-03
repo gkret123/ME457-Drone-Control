@@ -8,7 +8,7 @@ gravity = MAV.gravity  # gravity constant
 Va0 = 25 # TF.Va_trim
 Va_trim = 25 # TF.Va_trim
 alpha_trim = 0.0 # TF.alpha_trim
-delta_trim = 1.4 # TF.delta_trim
+delta_trim = 1 # TF.delta_trim
 theta_trim = 0.0 # TF.theta_trim
 rho = 1.293 # kg/m3 # density of air (From google)
 sigma = 1  # low pass filter gain for derivative
@@ -45,8 +45,8 @@ course_kp = 2*zeta_course*wn_course*Va0/gravity  # maybe Va0 should be Vg
 course_ki = wn_course**2*Va0/gravity
 
 #----------yaw damper-------------
-yaw_damper_p_wo = 0.1
-yaw_damper_kr = 1
+yaw_damper_p_wo = 0.45
+yaw_damper_kr = 0.2
 
 #----------pitch loop-------------
 wn_pitch = 20
