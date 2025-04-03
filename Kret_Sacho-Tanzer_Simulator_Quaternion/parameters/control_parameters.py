@@ -5,7 +5,7 @@ import parameters.aerosonde_parameters as MAV
 
 #### TODO #####
 gravity = MAV.gravity  # gravity constant
-Va0 = 25 # TF.Va_trim
+Va0 = 36 # TF.Va_trim
 rho = 1.293 # kg/m3 # density of air (From google)
 sigma = 1  # low pass filter gain for derivative
 
@@ -23,13 +23,13 @@ course_kp = 4.5  # K_u = 10, T_u = 1 s
 course_ki = 5.4
 
 #----------yaw damper-------------
-yaw_damper_p_wo = 10
-yaw_damper_kr = 5
+yaw_damper_p_wo = 1
+yaw_damper_kr = 1
 
 #----------pitch loop-------------
 wn_pitch = 0
 zeta_pitch = 0 
-pitch_kp = 5
+pitch_kp = 10
 pitch_kd = 0.16
 K_theta_DC = 0.5
 
