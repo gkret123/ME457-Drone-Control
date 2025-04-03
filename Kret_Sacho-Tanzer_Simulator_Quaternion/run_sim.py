@@ -42,7 +42,7 @@ cmd = MsgAutopilot()
 cmd.airspeed_command = 25  # commanded airspeed m/s
 cmd.course_command = 0#np.pi/8  # commanded course angle in rad
 cmd.altitude_command = -100  # commanded altitude in m
-cmd.phi_feedforward = 0.3 #0.5  # feedforward command for roll angle
+cmd.phi_feedforward = 10 #0.5  # feedforward command for roll angle
 
 
 # Initialize history lists for time and state.
@@ -81,8 +81,6 @@ while sim_time < sim_end_time:
     
     #advance timestep
     sim_time += Ts
-
-
 
 # Once simulation ends, create the plots using the collected data.
 plot.plot_results(time_array, state_array, title="Final Flight Dynamics", delta=delta_array)
