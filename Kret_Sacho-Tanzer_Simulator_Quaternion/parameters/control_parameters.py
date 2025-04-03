@@ -23,8 +23,8 @@ course_kp = 4.5  # K_u = 10, T_u = 1 s
 course_ki = 5.4
 
 #----------yaw damper-------------
-yaw_damper_p_wo = 1
-yaw_damper_kr = 10
+yaw_damper_p_wo = 10
+yaw_damper_kr = 5
 
 #----------pitch loop-------------
 wn_pitch = 0
