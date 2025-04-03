@@ -11,7 +11,7 @@ from message_types.msg_delta import MsgDelta
 from message_types.msg_state import MsgState
 from message_types.msg_autopilot import MsgAutopilot
 from models.trim import compute_trim
-from tools.rotations import euler_to_quaternion
+from tools.rotations import euler_to_quaternion, quaternion_to_euler
 from controllers.autopilot import Autopilot
 import plotter.plot_results as plot
 
@@ -29,14 +29,17 @@ from models.mav_dynamics_control import MavDynamics
 from message_types.msg_autopilot import MsgAutopilot
 
 AutoP = Autopilot(0.01)
-MAV = MavDynamics(0.01)
+new_initial = euler_to_quaternion(0, 0, 0) # inital [phi, theta, psi] in radians
+mav._state[6:10] = new_initial
+mav._update_true_state()
 state = MsgState()
 cmd = MsgAutopilot()
-cmd.airspeed_command = 25  # commanded airspeed m/s
-cmd.course_command = 0.3  # commanded course angle in rad
-cmd.altitude_command = 0.0  # commanded altitude in m
-cmd.phi_feedforward = 0.0  # feedforward command for roll angle
 
+
+cmd.airspeed_command = 25  # commanded airspeed m/s
+cmd.course_command = 0#np.pi/8  # commanded course angle in rad
+cmd.altitude_command = -150  # commanded altitude in m
+cmd.phi_feedforward = 0#0.5  # feedforward command for roll angle
 
 
 # Initialize history lists for time and state.
@@ -48,7 +51,7 @@ while sim_time < sim_end_time:
     # Update the model.
     state = mav.true_state
     delta, _ = AutoP.update(cmd, state)
-    delta.print()
+    # delta.print()
     
     mav.update(delta, wind)
     

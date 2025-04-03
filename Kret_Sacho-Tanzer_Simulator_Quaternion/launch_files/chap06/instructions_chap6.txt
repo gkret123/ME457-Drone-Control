@@ -5,7 +5,7 @@ closure, total energy control, or LQR.
     - Implement either "autopilot.py", "autopilot_lqr.py" or "autopilot_tec.py".
     - Tune gains in the "control_parameters.py" file.
 
-6.1 Implement the longitudinal autopilot and tune the gains. The input the
+6.1 Implement the longitudinal autopilot and tune the gains. The input to the
 longitudinal autopilot is the commanded airspeed and the commanded
 altitude. To make the process easier, you may want to initialize the
 system to trim inputs and then tune airspeed control first, followed by

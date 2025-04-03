@@ -89,6 +89,7 @@ class Autopilot:
                             state.altitude + AP.altitude_zone)
 
         theta_c = self.altitude_from_pitch.update(h_c, state.altitude)
+        # theta_c = 0
         delta_e = self.pitch_from_elevator.update(theta_c, state.theta, state.q)
         delta_t = self.airspeed_from_throttle.update(cmd.airspeed_command,
                                                      state.Va)

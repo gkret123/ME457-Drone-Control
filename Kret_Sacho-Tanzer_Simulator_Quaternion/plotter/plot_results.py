@@ -24,6 +24,7 @@ def plot_results(t, x, title="Flight Dynamics"):
     axs[0, 0].set_title("Position in NED Frame")
     axs[0, 0].set_xlabel("Time (s)")
     axs[0, 0].set_ylabel("Position (m)")
+    axs[0, 0].grid(True)
 
     # Velocity in body frame
     axs[0, 1].plot(t, x[:, 3], label="u (m/s)")
@@ -33,6 +34,7 @@ def plot_results(t, x, title="Flight Dynamics"):
     axs[0, 1].set_title("Linear Velocity in Body Frame")
     axs[0, 1].set_xlabel("Time (s)")
     axs[0, 1].set_ylabel("Velocity (m/s)")
+    axs[0, 1].grid(True)
 
     # Euler angles
     axs[1, 0].plot(t, x[:, 6], label="phi (rad)")
@@ -42,6 +44,7 @@ def plot_results(t, x, title="Flight Dynamics"):
     axs[1, 0].set_title("Euler Angles")
     axs[1, 0].set_xlabel("Time (s)")
     axs[1, 0].set_ylabel("Angle (rad)")
+    axs[1, 0].grid(True)
 
     # Angular velocities
     axs[1, 1].plot(t, x[:, 9], label="p (rad/s)")
@@ -51,6 +54,7 @@ def plot_results(t, x, title="Flight Dynamics"):
     axs[1, 1].set_title("Angular Velocities")
     axs[1, 1].set_xlabel("Time (s)")
     axs[1, 1].set_ylabel("Angular Velocity (rad/s)")
+    axs[1, 1].grid(True)
 
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     
