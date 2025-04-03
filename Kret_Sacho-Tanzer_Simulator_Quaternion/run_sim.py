@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
         # Simulation settings.
 sim_time = 0.0
 Ts = 0.01
-sim_end_time = 40
+sim_end_time = 100
 mav = MavDynamics(Ts)
 wind = np.array([[0.], [0.], [0.]])
 delta = MsgDelta()
@@ -33,15 +33,15 @@ AutoP = Autopilot(0.01)
 new_initial = euler_to_quaternion(0, 0, 0) # inital [phi, theta, psi] in radians
 # throttle can only cope with inital angle of 0.07 rad
 mav._state[6:10] = new_initial
-mav._state[3] = 36  # initial airspeed in m/s
+mav._state[3] = 25  # initial airspeed in m/s
 mav._update_true_state()
 state = MsgState()
 cmd = MsgAutopilot()
 
 
-cmd.airspeed_command = 36  # commanded airspeed m/s
+cmd.airspeed_command = 25  # commanded airspeed m/s
 cmd.course_command = 0#np.pi/8  # commanded course angle in rad
-cmd.altitude_command = 100  # commanded altitude in m
+cmd.altitude_command = 1000  # commanded altitude in m
 cmd.phi_feedforward = 0 #0.5  # feedforward command for roll angle
 
 
@@ -53,6 +53,7 @@ delta_array = []
 # Simulation loop.
 while sim_time < sim_end_time:
     # Update the model.
+    cmd.course_command = sim_time*0.2
     state = mav.true_state
     delta, _ = AutoP.update(cmd, state)
     delta_array.append(delta)
