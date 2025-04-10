@@ -28,6 +28,12 @@ class MavDynamics(MavDynamicsNoSensors):
         self._gps_eta_n = 0.
         self._gps_eta_e = 0.
         self._gps_eta_h = 0.
+
+        # NOTE: we made the next variables, maybes hsould be done differently
+        self._nu_n_prev = 0.  # previous value of nu_n
+        self._nu_e_prev = 0.  # previous value of nu_e
+        self._nu_h_prev = 0.  # previous value of nu_h
+
         # timer so that gps only updates every ts_gps seconds
         self._t_gps = 999.  # large value ensures gps updates at initial time.
 
@@ -59,22 +65,29 @@ class MavDynamics(MavDynamicsNoSensors):
 
         # simulate pressure sensors 
 
-        self._sensors.abs_pressure = 0
-        self._sensors.diff_pressure = 0
+        # NOTE: not 100% sure about these either: (they come from inverse of formulas in observer.py)
+        self._sensors.abs_pressure = -self._state.item(2) * MAV.rho0 * MAV.gravity + np.random.normal(0, SENSOR.abs_pres_sigma)  # absolute pressure in Pascals
+        self._sensors.diff_pressure = self.true_state.Va**2 * MAV.rho0 / 2. + np.random.normal(0, SENSOR.diff_pres_sigma)  # differential pressure in Pascals
         
         # simulate GPS sensor
         if self._t_gps >= SENSOR.ts_gps:
-            self._gps_eta_n = 0
-            self._gps_eta_e = 0
-            self._gps_eta_h = 0
-            self._sensors.gps_n = 0
-            self._sensors.gps_e = 0
-            self._sensors.gps_h = 0
-            self._sensors.gps_Vg = 0
-            self._sensors.gps_course = 0
+            self._gps_eta_n = np.random.normal(0, SENSOR.gps_n_sigma)  # GPS noise in north direction
+            self._gps_eta_e = np.random.normal(0, SENSOR.gps_e_sigma)  # GPS noise in east direction
+            self._gps_eta_h = np.random.normal(0, SENSOR.gps_h_sigma)  # GPS noise in altitude direction
+            
+            self._nu_n_prev = np.exp(-SENSOR.gps_k*SENSOR.ts_gps)*self._nu_n_prev + self._gps_eta_n
+            self._nu_e_prev = np.exp(-SENSOR.gps_k*SENSOR.ts_gps)*self._nu_e_prev + self._gps_eta_e
+            self._nu_h_prev = np.exp(-SENSOR.gps_k*SENSOR.ts_gps)*self._nu_h_prev + self._gps_eta_h
+            
+            self._sensors.gps_n = self._state.item(0) + self._nu_n_prev
+            self._sensors.gps_e = self._state.item(1) + self._nu_e_prev
+            self._sensors.gps_h = -self._state.item(2) + self._nu_h_prev
+            self._sensors.gps_Vg = np.sqrt(self._state.item(3)**2 + self._state.item(4)**2 + self._state.item(5)**2) + np.random.normal(0, SENSOR.gps_Vg_sigma)  # NOTE: these formulas are copilot, make sure they're correct
+            self._sensors.gps_course = np.arctan2(self._state.item(4), self._state.item(3)) + np.random.normal(0, SENSOR.gps_course_sigma)
             self._t_gps = 0.
         else:
             self._t_gps += self._ts_simulation
+
         return self._sensors
 
     def external_set_state(self, new_state):
