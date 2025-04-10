@@ -12,6 +12,7 @@ from tools.wrap import wrap
 from message_types.msg_state import MsgState
 from message_types.msg_sensors import MsgSensors
 from estimators.filters import AlphaFilter, ExtendedKalmanFilterContinuousDiscrete
+import parameters.aerosonde_parameters as parameters
 
 class Observer:
     def __init__(self, ts: float, initial_measurements: MsgSensors=MsgSensors()):
@@ -115,14 +116,14 @@ class Observer:
     def update(self, measurement: MsgSensors) -> MsgState:
         ##### TODO #####
         # estimates for p, q, r are low pass filter of gyro minus bias estimate
-        self.estimated_state.p = 
-        self.estimated_state.q = 
-        self.estimated_state.r = 
+        self.estimated_state.p = self.lpf_gyro_x.update(measurement.gyro_x) - self.estimated_state.bx
+        self.estimated_state.q = self.lpf_gyro_y.update(measurement.gyro_y) - self.estimated_state.by
+        self.estimated_state.r = self.lpf_gyro_z.update(measurement.gyro_z) - self.estimated_state.bz
         # invert sensor model to get altitude and airspeed
-        abs_pressure = 
-        diff_pressure = 
-        self.estimated_state.altitude = 
-        self.estimated_state.Va = 
+        abs_pressure = self.lpf_abs.update(measurement.abs_pressure)
+        diff_pressure = self.lpf_diff.update(measurement.diff_pressure)
+        self.estimated_state.altitude = abs_pressure / (parameters.rho * parameters.gravity)  # TODO: this was fully a guess, check if this is correct
+        self.estimated_state.Va = np.sqrt(2/parameters.rho * diff_pressure)
         # estimate phi and theta with ekf
         u_attitude=np.array([
                 [self.estimated_state.p],

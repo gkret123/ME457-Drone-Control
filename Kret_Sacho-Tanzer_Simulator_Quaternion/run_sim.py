@@ -41,7 +41,7 @@ cmd = MsgAutopilot()
 
 cmd.airspeed_command = 25  # commanded airspeed m/s
 cmd.course_command = 0#np.pi/8  # commanded course angle in rad
-cmd.altitude_command = 1000  # commanded altitude in m
+cmd.altitude_command = 100  # commanded altitude in m
 cmd.phi_feedforward = 0 #0.5  # feedforward command for roll angle
 
 
