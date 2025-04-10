@@ -57,7 +57,8 @@ class MavDynamics(MavDynamicsNoSensors):
         self._sensors.mag_y = 0
         self._sensors.mag_z = 0
 
-        # simulate pressure sensors
+        # simulate pressure sensors 
+
         self._sensors.abs_pressure = 0
         self._sensors.diff_pressure = 0
         
