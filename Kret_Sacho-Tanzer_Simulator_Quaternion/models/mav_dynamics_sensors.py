@@ -8,6 +8,10 @@ mavsim_python
     - Update history:  
         2/24/2020 - RWB
 """
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/..")
+
 import numpy as np
 from message_types.msg_sensors import MsgSensors
 import parameters.aerosonde_parameters as MAV
@@ -31,14 +35,20 @@ class MavDynamics(MavDynamicsNoSensors):
         "Return value of sensors on MAV: gyros, accels, absolute_pressure, dynamic_pressure, GPS"
        
         # simulate rate gyros(units are rad / sec)
-        self._sensors.gyro_x = 0
-        self._sensors.gyro_y = 0
-        self._sensors.gyro_z = 0
+        self._sensors.gyro_x = self._state.item(10) + SENSOR.gyro_x_bias + np.random.normal(0, SENSOR.gyro_sigma)
+        self._sensors.gyro_y = self._state.item(11) + SENSOR.gyro_y_bias + np.random.normal(0, SENSOR.gyro_sigma)
+        self._sensors.gyro_z = self._state.item(12) + SENSOR.gyro_z_bias + np.random.normal(0, SENSOR.gyro_sigma)
 
+        #state = [pn, pe, h, u, v, w, q0, q1, q2, q3, p, q, r]
+        phi, theta, psi = quaternion_to_euler(self._state[6:10])
         # simulate accelerometers(units of g)
-        self._sensors.accel_x = 0
-        self._sensors.accel_y = 0
-        self._sensors.accel_z = 0
+
+        #accel_x = u_dot +qw-rv+gsin(theta)
+        self._sensors.accel_x = self._f.item(3) + self._state.item(11) * self._state.item(5) - self._state.item(12) * self._state.item(4) + MAV.gravity * np.sin(theta)
+        #accel_y = v_dot + ru-pw-gcos(theta)sin(phi)
+        self._sensors.accel_y = self._f.item(4) + self._state.item(12) * self._state.item(3) - self._state.item(10) * self._state.item(5) - MAV.gravity * np.cos(theta) * np.sin(phi)
+        #accel_z = w_dot + pv-qu-gcos(theta)cos(phi)
+        self._sensors.accel_z = self._f.item(5) + self._state.item(10) * self._state.item(4) - self._state.item(11) * self._state.item(3) - MAV.gravity * np.cos(theta) * np.cos(phi)
 
         # simulate magnetometers
         # magnetic field in provo has magnetic declination of 12.5 degrees
