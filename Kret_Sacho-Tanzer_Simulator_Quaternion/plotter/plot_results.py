@@ -71,6 +71,7 @@ def plot_results(t, x, title="Flight Dynamics", delta=None):
     ax3d.set_ylabel("East (m)")
     ax3d.set_zlabel("Down (m)")
     ax3d.legend()
+    ax3d.set_box_aspect([1, 1, 1])
     plt.suptitle("3D Position")
     
     if not (delta is None):
