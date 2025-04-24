@@ -202,7 +202,7 @@ class Observer:
                 u = [p, q, r, Va].T
         '''
         ##### TODO #####
-        xdot =
+        xdot = 
         return xdot
 
     def h_accel(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
