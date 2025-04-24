@@ -33,9 +33,16 @@ wind = WindSimulation(SIM.ts_simulation)
 mav = MavDynamics(SIM.ts_simulation)
 autopilot = Autopilot(SIM.ts_simulation)
 observer = Observer(SIM.ts_simulation)
-viewers = ViewManager(mav=True, 
-                      data=True,
-                      video=False, video_name='chap8.mp4')
+
+viewers = ViewManager(
+    animation=True,      # turn on all the “animation” viewers
+    path=True,           # use the MAV‐and‐path viewer
+    data=True,           # turn on the data‐plot viewer
+    # sensors=False,     # leave sensor plots off (default)
+    video=False,         # no video recording
+    video_name='chap8.mp4'
+)
+
 
 # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
