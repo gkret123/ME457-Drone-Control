@@ -3,7 +3,8 @@ import os, sys
 from pathlib import Path
 sys.path.insert(0,os.fspath(Path(__file__).parents[2]))
 import numpy as np
-from models.mav_dynamics_control import MavDynamics
+from models.mav_dynamics_control import MavDynamics as MAV
+from models.mav_dynamics_sensors import MavDynamics as MAV
 # from models.compute_models import compute_ss_model, compute_tf_model, euler_state, quaternion_state, f_euler, df_dx, df_du, dT_dVa, dT_ddelta_t
 from plotter.plot_results import plot_results
 import parameters.simulation_parameters as SIM
@@ -15,18 +16,19 @@ from tools.rotations import euler_to_quaternion, quaternion_to_euler
 from controllers.autopilot import Autopilot
 import plotter.plot_results as plot
 import matplotlib.pyplot as plt
+from estimators.observer import Observer
 
 # Initialize the model, wind, and control inputs.
         # Simulation settings.
 sim_time = 0.0
 Ts = 0.01
 sim_end_time = 100
-mav = MavDynamics(Ts)
+mav = MAV(Ts)
 wind = np.array([[0.], [0.], [0.]])
 delta = MsgDelta()
 
+observer = Observer(Ts)
 
-from models.mav_dynamics_control import MavDynamics
 from message_types.msg_autopilot import MsgAutopilot
 
 AutoP = Autopilot(0.01)
@@ -54,7 +56,8 @@ delta_array = []
 while sim_time < sim_end_time:
     # Update the model.
     cmd.course_command = sim_time*0.2
-    state = mav.true_state
+    state = mav.true_state  # TODO: to implement noise, use estimated state instead of true states
+    state = observer.update(mav.sensors())  # estimate states from measurements
     delta, _ = AutoP.update(cmd, state)
     delta_array.append(delta)
     # delta.print()

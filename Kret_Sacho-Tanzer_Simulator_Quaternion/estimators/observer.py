@@ -159,12 +159,14 @@ class Observer:
         return self.estimated_state
 
     def f_attitude(self, x: np.ndarray, u: np.ndarray) -> np.ndarray:
-        # x = [phi, theta], u = [p, q, r, Va]
-        phi, theta = x[0,0], x[1,0]
-        p, q, r = u[0,0], u[1,0], u[2,0]
-        phi_dot   = p + np.tan(theta)*(q*np.sin(phi) + r*np.cos(phi))
-        theta_dot = q*np.cos(phi) - r*np.sin(phi)
-        return np.array([[phi_dot], [theta_dot]])
+        '''
+            system dynamics for propagation model: xdot = f(x, u)
+                x = [phi, theta].T
+                u = [p, q, r, Va].T
+        '''
+        ##### TODO #####
+        xdot = 
+        return xdot
 
     def h_accel(self, x: np.ndarray, u: np.ndarray) -> np.ndarray:
         # x = [phi, theta], u = [p, q, r, Va]

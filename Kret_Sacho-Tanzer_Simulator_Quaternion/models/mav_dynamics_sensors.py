@@ -50,11 +50,11 @@ class MavDynamics(MavDynamicsNoSensors):
         # simulate accelerometers(units of g)
 
         #accel_x = u_dot +qw-rv+gsin(theta)
-        self._sensors.accel_x = self._f.item(3) + self._state.item(11) * self._state.item(5) - self._state.item(12) * self._state.item(4) + MAV.gravity * np.sin(theta)
+        self._sensors.accel_x = self._state.item(3) + self._state.item(11) * self._state.item(5) - self._state.item(12) * self._state.item(4) + MAV.gravity * np.sin(theta)
         #accel_y = v_dot + ru-pw-gcos(theta)sin(phi)
-        self._sensors.accel_y = self._f.item(4) + self._state.item(12) * self._state.item(3) - self._state.item(10) * self._state.item(5) - MAV.gravity * np.cos(theta) * np.sin(phi)
+        self._sensors.accel_y = self._state.item(4) + self._state.item(12) * self._state.item(3) - self._state.item(10) * self._state.item(5) - MAV.gravity * np.cos(theta) * np.sin(phi)
         #accel_z = w_dot + pv-qu-gcos(theta)cos(phi)
-        self._sensors.accel_z = self._f.item(5) + self._state.item(10) * self._state.item(4) - self._state.item(11) * self._state.item(3) - MAV.gravity * np.cos(theta) * np.cos(phi)
+        self._sensors.accel_z = self._state.item(5) + self._state.item(10) * self._state.item(4) - self._state.item(11) * self._state.item(3) - MAV.gravity * np.cos(theta) * np.cos(phi)
 
         # simulate magnetometers
         # magnetic field in provo has magnetic declination of 12.5 degrees
