@@ -204,7 +204,10 @@ class Observer:
         ##### TODO #####
         phi, theta = x.flatten()
         p, q, r, Va = u.flatten()
-        xdot = np.array([[q*np.cos(phi)*np.tan(theta) - r*np.sin(phi)*np.tan(theta), (q*np.sin(phi) - r*np.cos(phi))/np.cos(theta)**2], [-q*np.sin(phi) - r*np.cos(phi), 0]])
+        # xdot = np.array([[q*np.cos(phi)*np.tan(theta) - r*np.sin(phi)*np.tan(theta), (q*np.sin(phi) - r*np.cos(phi))/np.cos(theta)**2], [-q*np.sin(phi) - r*np.cos(phi), 0]])
+        phidot = p+q*np.sin(phi)*np.tan(theta) + r*np.cos(phi)*np.tan(theta)
+        thetadot = q*np.cos(phi) - r*np.sin(phi)
+        xdot = np.array([[phidot], [thetadot]])
         return xdot
 
     def h_accel(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
