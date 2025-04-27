@@ -202,11 +202,9 @@ class Observer:
                 u = [p, q, r, Va].T
         '''
         ##### TODO #####
-        phi, theta = x
-        p, q, r, Va = u
-        xdot = np.array([q*np.cos(phi)*np.tan(theta) - r*np.sin(phi)*np.tan(theta),
-                          (q*np.sin(phi) - r*np.cos(phi))/np.cos(theta)**2],
-                          [-q*np.sin(phi) - r*np.cos(phi), 0])
+        phi, theta = x.flatten()
+        p, q, r, Va = u.flatten()
+        xdot = np.array([[q*np.cos(phi)*np.tan(theta) - r*np.sin(phi)*np.tan(theta), (q*np.sin(phi) - r*np.cos(phi))/np.cos(theta)**2], [-q*np.sin(phi) - r*np.cos(phi), 0]])
         return xdot
 
     def h_accel(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
@@ -243,8 +241,8 @@ class Observer:
                 u = [p, q, r, Va, phi, theta].T
         '''
         ##### TODO #####        
-        pn, pe, Vg, chi, wn, we, psi = x
-        p, q, r, Va, phi, theta = u
+        pn, pe, Vg, chi, wn, we, psi = x.flatten()
+        p, q, r, Va, phi, theta = u.flatten()
 
         psi_dot = q * np.sin(phi) / np.cos(theta) + r + np.cos(phi) / np.cos(theta)
         Vg_dot = ((Va*np.cos(psi)+wn) * (-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg
