@@ -66,8 +66,8 @@ class MavDynamics(MavDynamicsNoSensors):
         # simulate pressure sensors 
 
         # NOTE: not 100% sure about these either: (they come from inverse of formulas in observer.py)
-        self._sensors.abs_pressure = -self._state.item(2) * MAV.rho0 * MAV.gravity + np.random.normal(0, SENSOR.abs_pres_sigma)  # absolute pressure in Pascals
-        self._sensors.diff_pressure = self.true_state.Va**2 * MAV.rho0 / 2. + np.random.normal(0, SENSOR.diff_pres_sigma)  # differential pressure in Pascals
+        self._sensors.abs_pressure = -self._state.item(2) * MAV.rho * MAV.gravity + np.random.normal(0, SENSOR.abs_pres_sigma)  # absolute pressure in Pascals
+        self._sensors.diff_pressure = self.true_state.Va**2 * MAV.rho / 2. + np.random.normal(0, SENSOR.diff_pres_sigma)  # differential pressure in Pascals
         
         # simulate GPS sensor
         if self._t_gps >= SENSOR.ts_gps:

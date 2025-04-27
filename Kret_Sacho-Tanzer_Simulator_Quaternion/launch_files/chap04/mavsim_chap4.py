@@ -26,9 +26,14 @@ import time
 wind = WindSimulation(SIM.ts_simulation)
 mav = MavDynamics(SIM.ts_simulation)
 delta = MsgDelta()
-viewers = ViewManager(mav=True, 
-                      data=True,
-                      video=False, video_name='chap4.mp4')
+viewers = ViewManager(
+    animation=True,      # turn on all the “animation” viewers
+    path=True,           # use the MAV‐and‐path viewer
+    data=True,           # turn on the data‐plot viewer
+    # sensors=False,     # leave sensor plots off (default)
+    video=False,         # no video recording
+    video_name='chap4.mp4'
+)
 
 # initialize the simulation time
 sim_time = SIM.start_time
