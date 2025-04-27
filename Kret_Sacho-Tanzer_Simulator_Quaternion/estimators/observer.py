@@ -263,8 +263,16 @@ class Observer:
             returns
                 y = [pn, pe, Vg, chi]
         '''
-        ##### TODO #####         
-        y = 
+        Vg = x[2]
+        chi = x[3]
+        wn = x[4]
+        we = x[5]
+        psi = x[6]
+
+        Va = u[2]
+
+        y = np.array([Va * np.cos(psi) + wn - Vg * np.cos(chi), Va * np.sin(psi) + we - Vg * np.sin(chi)])
+        
         return y
 
     def h_gps(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
@@ -275,6 +283,9 @@ class Observer:
             returns
                 y = [pn, pe, Vg, chi]
         '''
-        ##### TODO #####         
-        y = 
+        pn = x[0]
+        pe = x[1]
+        Vg = x[2]
+        chi = x[3]
+        y = np.array([pn, pe, Vg, chi])
         return y
