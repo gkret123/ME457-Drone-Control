@@ -19,6 +19,7 @@ from models.mav_dynamics_sensors import MavDynamics
 from models.wind_simulation import WindSimulation
 from controllers.autopilot import Autopilot
 from viewers.view_manager import ViewManager
+from message_types.msg_path import MsgPath
 import time
 
 
@@ -29,8 +30,9 @@ autopilot = Autopilot(SIM.ts_simulation)
 viewers = ViewManager(path=True, 
                       data=True,
                       sensors=True,
+                      animation=True,
                       video=False, video_name='chap7.mp4')
-
+path = MsgPath()
 # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
 commands = MsgAutopilot()
@@ -40,7 +42,7 @@ Va_command = Signals(dc_offset=25.0,
                      frequency=0.01)
 altitude_command = Signals(dc_offset=100.0,
                            amplitude=10.0,
-                           start_time=0.0,
+                           start_time=10.0,
                            frequency=0.02)
 course_command = Signals(dc_offset=np.radians(180),
                          amplitude=np.radians(45),
@@ -49,7 +51,7 @@ course_command = Signals(dc_offset=np.radians(180),
 
 # initialize the simulation time
 sim_time = SIM.start_time
-end_time = 100
+end_time = 200
 
 # main simulation loop
 print("Press 'Esc' to exit...")
@@ -59,6 +61,7 @@ while sim_time < end_time:
     commands.airspeed_command = Va_command.square(sim_time)
     commands.course_command = course_command.square(sim_time)
     commands.altitude_command = altitude_command.square(sim_time)
+
 
     # -------autopilot-------------
     measurements = mav.sensors()  # get sensor measurements
@@ -76,6 +79,7 @@ while sim_time < end_time:
         commanded_state=commanded_state,  # commanded states
         delta=delta, # inputs to MAV
         measurements=measurements,  # measurements
+        path=path, # path
     )
         
     # # -------Check to Quit the Loop-------

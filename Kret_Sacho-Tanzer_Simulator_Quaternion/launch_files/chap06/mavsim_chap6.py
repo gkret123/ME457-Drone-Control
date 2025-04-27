@@ -44,9 +44,9 @@ Va_command = Signals(dc_offset=25.0,
                      amplitude=3.0,
                      start_time=2.0,
                      frequency=0.01)
-altitude_command = Signals(dc_offset=100.0,
-                           amplitude=20.0,
-                           start_time=0.0,
+altitude_command = Signals(dc_offset=0.0,
+                           amplitude=2000.0,
+                           start_time=40.0,
                            frequency=0.02)
 course_command = Signals(dc_offset=np.radians(180),
                          amplitude=np.radians(45),
@@ -66,6 +66,9 @@ while sim_time < end_time:
     commands.course_command = course_command.square(sim_time)
     commands.altitude_command = altitude_command.square(sim_time)
 
+    commands.airspeed_command = Va_command.step(sim_time)
+    commands.course_command = course_command.step(sim_time)
+    commands.altitude_command = altitude_command.step(sim_time-10)
     # -------autopilot-------------
     estimated_state = mav.true_state  # uses true states in the control
     delta, commanded_state = autopilot.update(commands, estimated_state)
