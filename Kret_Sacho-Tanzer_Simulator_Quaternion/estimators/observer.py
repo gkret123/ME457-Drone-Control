@@ -248,10 +248,13 @@ class Observer:
 
         psi_dot = q * np.sin(phi) / np.cos(theta) + r + np.cos(phi) / np.cos(theta)
         Vg_dot = ((Va*np.cos(psi)+wn) * (-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg
-        chi_dot = g/Vg*np.tan(phi)*np.cos(chi-psi)
+        chi_dot = parameters.gravity/Vg*np.tan(phi)*np.cos(chi-psi)
 
+        del_vgdot_psi = -psi_dot*Va*(wn*np.cos(psi)+we*np.sin(psi))/Vg
+        del_chidot_vg = -parameters.gravity/Vg**2*np.tan(phi)*np.cos(chi-psi)
+        del_chidot_chi = -parameters.gravity/Vg*np.tan(phi)*np.sin(chi-psi)
+        del_chidot_psi = parameters.gravity/Vg*np.tan(phi)*np.sin(chi-psi)
         
-        del_vg_psi = 
         xdot = 
         return xdot
 
