@@ -17,6 +17,7 @@ import numpy as np
 import parameters.simulation_parameters as SIM
 from tools.signals import Signals
 from models.mav_dynamics_control import MavDynamics
+from message_types.msg_path import MsgPath
 from models.wind_simulation import WindSimulation
 from controllers.autopilot import Autopilot
 #from controllers.autopilot_tecs import Autopilot
@@ -30,10 +31,12 @@ import time
 wind = WindSimulation(SIM.ts_simulation)
 mav = MavDynamics(SIM.ts_simulation)
 autopilot = Autopilot(SIM.ts_simulation)
-viewers = ViewManager(mav=True, 
+viewers = ViewManager(path=True, 
                       data=True,
-                      video=False, video_name='chap6.mp4')
-
+                      video=False, 
+                      animation=True,
+                      video_name='chap6.mp4')
+path = MsgPath()
 # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
 commands = MsgAutopilot()
@@ -77,6 +80,7 @@ while sim_time < end_time:
         true_state=mav.true_state,  # true states
         commanded_state=commanded_state,  # commanded states
         delta=delta, # inputs to MAV
+        path=path # path
     )
        
     # -------Check to Quit the Loop-------
