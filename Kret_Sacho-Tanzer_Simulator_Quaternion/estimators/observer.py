@@ -255,7 +255,13 @@ class Observer:
         del_chidot_chi = -parameters.gravity/Vg*np.tan(phi)*np.sin(chi-psi)
         del_chidot_psi = parameters.gravity/Vg*np.tan(phi)*np.sin(chi-psi)
         
-        xdot = 
+        xdot = np.array([[0, 0, np.cos(chi), -Vg*np.sin(chi), 0, 0, 0],
+                          [0, 0, np.sin(chi), Vg*np.cos(chi), 0, 0, 0],
+                          [0, 0, -Vg_dot/Vg, 0, -psi_dot*Va*np.sin(psi), psi_dot*Va*np.cos(psi), del_vgdot_psi],
+                          [0, 0, del_chidot_vg, del_chidot_chi, 0, 0, del_chidot_psi],
+                          [0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0]])
         return xdot
 
     def h_pseudo(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
