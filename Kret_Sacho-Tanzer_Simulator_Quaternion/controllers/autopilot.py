@@ -101,9 +101,9 @@ class Autopilot:
                          aileron=delta_a,
                          rudder=delta_r,
                          throttle=delta_t)
-        self.commanded_state.altitude = 0
-        self.commanded_state.Va = 0
-        self.commanded_state.phi = 0
-        self.commanded_state.theta = 0
-        self.commanded_state.chi = 0
+        self.commanded_state.altitude = cmd.altitude_command
+        self.commanded_state.Va = cmd.airspeed_command
+        self.commanded_state.phi = phi_c
+        self.commanded_state.theta = theta_c
+        self.commanded_state.chi = chi_c
         return delta, self.commanded_state
