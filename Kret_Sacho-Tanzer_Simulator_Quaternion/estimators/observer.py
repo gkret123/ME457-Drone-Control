@@ -211,8 +211,25 @@ class Observer:
                 x = [phi, theta].T
                 u = [p, q, r, Va].T
         '''
-        ##### TODO #####
-        y = 
+        phi = x[0]
+        theta = x[1]
+
+        p = u[0]
+        q = u[1]
+        r = u[2]
+        Va = u[3]
+
+        h11 = 0.0
+        h12 = q*Va*np.cos(theta) + parameters.gravity*np.cos(theta)
+        h21 = -parameters.gravity*np.cos(phi)*np.cos(theta)
+        h22 = -r*Va*np.sin(theta) - p*Va*np.cos(theta) + parameters.gravity*np.sin(phi)*np.sin(theta)
+        h31 = parameters.gravity*np.sin(phi)*np.cos(theta)
+        h32 = (q*Va + parameters.gravity*np.cos(phi))*np.sin(theta)
+        y = np.array([
+            [h11, h12],
+            [h21, h22],
+            [h31, h32],
+            ])
         return y
 
     def f_smooth(self, x, u):
