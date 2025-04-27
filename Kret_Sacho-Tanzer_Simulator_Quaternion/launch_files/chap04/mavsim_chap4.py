@@ -30,16 +30,13 @@ mav = MavDynamics(SIM.ts_simulation)
 delta = MsgDelta()
 viewers = ViewManager(path=True, 
                       data=False,
-                      video=False, video_name='chap10.mp4')
+                      video=False, 
+                      animation=True,
+                    video_name='chap10.mp4')
 #quitter = QuitListener()
 
 # path definition
-path = MsgPath(
-    type='line', 
-    airspeed = 25,
-    line_origin = np.array([[0.0, 0.0, -100.0]]).T,
-    line_direction = np.array([[0.5, 1.0, 0.0]]).T,
-    )
+path = MsgPath()
 # path = MsgPath(
 #     type='orbit', 
 #     airspeed = 25,
@@ -70,8 +67,8 @@ while sim_time < end_time:
     viewers.update(
         sim_time,
         true_state=mav.true_state,  # true states
-        # estimated_state=estimated_state,  # estimated states        
-        # commanded_state=commanded_state,  # commanded states
+        #estimated_state=estimated_state,  # estimated states        
+        #commanded_state=commanded_state,  # commanded states
         delta=delta, # inputs to MAV
         path=path, # path
     )
