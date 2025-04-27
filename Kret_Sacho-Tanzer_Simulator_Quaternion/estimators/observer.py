@@ -202,7 +202,11 @@ class Observer:
                 u = [p, q, r, Va].T
         '''
         ##### TODO #####
-        xdot = 
+        phi, theta = x
+        p, q, r, Va = u
+        xdot = np.array([q*np.cos(phi)*np.tan(theta) - r*np.sin(phi)*np.tan(theta),
+                          (q*np.sin(phi) - r*np.cos(phi))/np.cos(theta)**2],
+                          [-q*np.sin(phi) - r*np.cos(phi), 0])
         return xdot
 
     def h_accel(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
