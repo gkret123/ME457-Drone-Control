@@ -19,6 +19,8 @@ from models.wind_simulation import WindSimulation
 from message_types.msg_delta import MsgDelta
 from viewers.view_manager import ViewManager
 import time
+from message_types.msg_path import MsgPath
+import numpy as np
 
 #quitter = QuitListener()
 
@@ -26,14 +28,25 @@ import time
 wind = WindSimulation(SIM.ts_simulation)
 mav = MavDynamics(SIM.ts_simulation)
 delta = MsgDelta()
-viewers = ViewManager(
-    animation=True,      # turn on all the “animation” viewers
-    path=True,           # use the MAV‐and‐path viewer
-    data=True,           # turn on the data‐plot viewer
-    # sensors=False,     # leave sensor plots off (default)
-    video=False,         # no video recording
-    video_name='chap4.mp4'
-)
+viewers = ViewManager(path=True, 
+                      data=False,
+                      video=False, video_name='chap10.mp4')
+#quitter = QuitListener()
+
+# path definition
+path = MsgPath(
+    type='line', 
+    airspeed = 25,
+    line_origin = np.array([[0.0, 0.0, -100.0]]).T,
+    line_direction = np.array([[0.5, 1.0, 0.0]]).T,
+    )
+# path = MsgPath(
+#     type='orbit', 
+#     airspeed = 25,
+#     orbit_center = np.array([[0.0, 0.0, -100.0]]).T,
+#     orbit_radius = 200.0,
+#     orbit_direction = 'CCW', # 'CCW',
+#     )
 
 # initialize the simulation time
 sim_time = SIM.start_time
@@ -57,7 +70,10 @@ while sim_time < end_time:
     viewers.update(
         sim_time,
         true_state=mav.true_state,  # true states
-        delta=delta,
+        # estimated_state=estimated_state,  # estimated states        
+        # commanded_state=commanded_state,  # commanded states
+        delta=delta, # inputs to MAV
+        path=path, # path
     )
         
     # # -------Check to Quit the Loop-------
