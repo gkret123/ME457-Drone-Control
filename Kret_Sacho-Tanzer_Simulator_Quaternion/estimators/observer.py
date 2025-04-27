@@ -243,6 +243,15 @@ class Observer:
                 u = [p, q, r, Va, phi, theta].T
         '''
         ##### TODO #####        
+        pn, pe, Vg, chi, wn, we, psi = x
+        p, q, r, Va, phi, theta = u
+
+        psi_dot = q * np.sin(phi) / np.cos(theta) + r + np.cos(phi) / np.cos(theta)
+        Vg_dot = ((Va*np.cos(psi)+wn) * (-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg
+        chi_dot = g/Vg*np.tan(phi)*np.cos(chi-psi)
+
+        
+        del_vg_psi = 
         xdot = 
         return xdot
 
