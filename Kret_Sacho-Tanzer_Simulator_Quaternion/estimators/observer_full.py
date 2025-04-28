@@ -16,6 +16,7 @@ from tools.wrap import wrap
 from message_types.msg_state import MsgState
 from message_types.msg_sensors import MsgSensors
 from estimators.filters import AlphaFilter, ExtendedKalmanFilterContinuousDiscrete
+from estimators.filters import KalmanFilterDiscrete
 
 
 class Observer:

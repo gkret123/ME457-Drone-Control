@@ -13,20 +13,21 @@ from message_types.msg_state import MsgState
 from message_types.msg_sensors import MsgSensors
 from estimators.filters import AlphaFilter, ExtendedKalmanFilterContinuousDiscrete
 import parameters.aerosonde_parameters as parameters
+from estimators.filters import KalmanFilterDiscrete
 
-class Observer:
+class Observer2:
     def __init__(self, ts: float, initial_measurements: MsgSensors=MsgSensors()):
         self.Ts = ts  # sample rate of observer
         # initialized estimated state message
         self.estimated_state = MsgState()
 
         ##### TODO #####
-        self.lpf_gyro_x = AlphaFilter(alpha=0., y0=initial_measurements.gyro_x)
-        self.lpf_gyro_y = AlphaFilter(alpha=0., y0=initial_measurements.gyro_y)
-        self.lpf_gyro_z = AlphaFilter(alpha=0., y0=initial_measurements.gyro_z)
-        self.lpf_accel_x = AlphaFilter(alpha=0., y0=initial_measurements.accel_x)
-        self.lpf_accel_y = AlphaFilter(alpha=0., y0=initial_measurements.accel_y)
-        self.lpf_accel_z = AlphaFilter(alpha=0., y0=initial_measurements.accel_z)
+        self.lpf_gyro_x = AlphaFilter(alpha=0.7, y0=initial_measurements.gyro_x)
+        self.lpf_gyro_y = AlphaFilter(alpha=0.7, y0=initial_measurements.gyro_y)
+        self.lpf_gyro_z = AlphaFilter(alpha=0.7, y0=initial_measurements.gyro_z)
+        self.lpf_accel_x = AlphaFilter(alpha=0.7, y0=initial_measurements.accel_x)
+        self.lpf_accel_y = AlphaFilter(alpha=0.7, y0=initial_measurements.accel_y)
+        self.lpf_accel_z = AlphaFilter(alpha=0.7, y0=initial_measurements.accel_z)
         # use alpha filters to low pass filter absolute and differential pressure
         self.lpf_abs = AlphaFilter(alpha=0., y0=initial_measurements.abs_pressure)
         self.lpf_diff = AlphaFilter(alpha=0., y0=initial_measurements.diff_pressure)
@@ -209,7 +210,7 @@ class Observer:
         thetadot = q*np.cos(phi) - r*np.sin(phi)
         xdot = np.array([[phidot], [thetadot]])
         return xdot
-
+    """
     def h_accel(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
         '''
             measurement model y=h(x,u) for accelerometers
@@ -233,10 +234,35 @@ class Observer:
         y = np.array([
             [h11, h12],
             [h21, h22],
-            [h31, h32],
+            [h31, h32]
+            ])
+        return y"""
+    
+    def h_accel(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
+        '''
+            measurement model y=h(x,u) for accelerometers
+                x = [phi, theta].T
+                u = [p, q, r, Va].T
+        '''
+        phi = x[0]
+        theta = x[1]
+
+        p = u[0]
+        q = u[1]
+        r = u[2]
+        Va = u[3]
+
+        
+        h1 = q*Va*np.sin(theta) + parameters.gravity*np.sin(theta)
+        h2 = r*Va*np.cos(theta) - p*Va*np.sin(theta) - parameters.gravity*np.cos(theta)*np.sin(phi)
+        h3 = -q*Va*np.cos(theta) - parameters.gravity*np.cos(theta)*np.cos(phi)
+        y = np.array([
+            [*h1],
+            [*h2],
+            [*h3]
             ])
         return y
-
+    
     def f_smooth(self, x, u):
         '''
             system dynamics for propagation model: xdot = f(x, u)
@@ -246,7 +272,7 @@ class Observer:
         ##### TODO #####        
         pn, pe, Vg, chi, wn, we, psi = x.flatten()
         p, q, r, Va, phi, theta = u.flatten()
-
+        #q, r, Va, phi, theta = u.flatten()
         psi_dot = q * np.sin(phi) / np.cos(theta) + r + np.cos(phi) / np.cos(theta)
         Vg_dot = ((Va*np.cos(psi)+wn) * (-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg
         chi_dot = parameters.gravity/Vg*np.tan(phi)*np.cos(chi-psi)
@@ -299,3 +325,4 @@ class Observer:
         chi = x[3]
         y = np.array([pn, pe, Vg, chi])
         return y
+
