@@ -77,14 +77,14 @@ while sim_time < end_time:
 
     
     # -------autopilot commands-------------
-    commands.airspeed_command = Va_command.polynomial(sim_time)
-    commands.course_command = chi_command.polynomial(sim_time)
-    commands.altitude_command = h_command.polynomial(sim_time)
+    # commands.airspeed_command = Va_command.polynomial(sim_time)
+    # commands.course_command = chi_command.polynomial(sim_time)
+    # commands.altitude_command = h_command.polynomial(sim_time)
     
     # -------autopilot commands-------------
-    # commands.airspeed_command = Va_command.square(sim_time)
-    # commands.course_command = chi_command.square(sim_time)
-    # commands.altitude_command = h_command.square(sim_time)
+    commands.airspeed_command = Va_command.square(sim_time)
+    commands.course_command = chi_command.square(sim_time)
+    commands.altitude_command = h_command.square(sim_time)
     
     # -------- autopilot -------------
     measurements = mav.sensors()  # get sensor measurements
@@ -92,9 +92,6 @@ while sim_time < end_time:
     delta, commanded_state = autopilot.update(commands, estimated_state)
     #delta, commanded_state = autopilot.update(commands, mav.true_state)
     
-
-   
-
 
     # -------- physical system -------------
     current_wind = wind.update()  # get the new wind vector
@@ -122,9 +119,5 @@ while sim_time < end_time:
 viewers.close(dataplot_name="ch8_data_plot", 
               sensorplot_name="ch8_sensor_plot")
 
-
-
-
-
-
-
+# TODO: beta_e is always 0, wn and we are always 0
+# beta_e is 0 because it's not being estimated (?) (says on observer line 193)
