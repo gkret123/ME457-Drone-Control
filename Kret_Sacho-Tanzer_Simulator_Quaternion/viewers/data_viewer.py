@@ -183,8 +183,8 @@ class DataViewer:
             self._plotter.add_data_point(plot_id='pe', data_label='pe_e', xvalue=t, yvalue=estimated_state.east)
             self._plotter.add_data_point(plot_id='h', data_label='h_e', xvalue=t, yvalue=estimated_state.altitude)
             self._plotter.add_data_point(plot_id='Va', data_label='Va_e', xvalue=t, yvalue=estimated_state.Va)
-            self._plotter.add_data_point(plot_id='alpha', data_label='alpha_e', xvalue=t, yvalue=estimated_state.alpha[0])
-            self._plotter.add_data_point(plot_id='beta', data_label='beta_e', xvalue=t, yvalue=estimated_state.beta[0])
+            self._plotter.add_data_point(plot_id='alpha', data_label='alpha_e', xvalue=t, yvalue=estimated_state.alpha)  # I made this alph[0], beta[0] before
+            self._plotter.add_data_point(plot_id='beta', data_label='beta_e', xvalue=t, yvalue=estimated_state.beta)
             self._plotter.add_data_point(plot_id='phi', data_label='phi_e', xvalue=t, yvalue=self.__rad_to_deg(estimated_state.phi))
             self._plotter.add_data_point(plot_id='theta', data_label='theta_e', xvalue=t, yvalue=self.__rad_to_deg(estimated_state.theta))
             self._plotter.add_data_point(plot_id='psi', data_label='psi_e', xvalue=t, yvalue=self.__rad_to_deg(estimated_state.psi))
