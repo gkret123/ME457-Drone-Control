@@ -35,12 +35,12 @@ class Observer:
         self.attitude_ekf = ExtendedKalmanFilterContinuousDiscrete(
             f=self.f_attitude, 
             Q=np.diag([
-                (0)**2, # phi 
-                (0)**2, # theta
+                (1e-3)**2, # phi 
+                (1e-3)**2, # theta
                 ]), 
             P0= np.diag([
-                (0)**2, # phi
-                (0)**2, # theta
+                (10*np.pi/180)**2, # phi
+                (10*np.pi/180)**2, # theta
                 ]), 
             xhat0=np.array([
                 [0.*np.pi/180.], # phi 
@@ -58,27 +58,27 @@ class Observer:
         self.position_ekf = ExtendedKalmanFilterContinuousDiscrete(
             f=self.f_smooth, 
             Q=np.diag([
-                (0.0)**2,  # pn
-                (0.0)**2,  # pe
-                (0.0)**2,  # Vg
-                (0.0)**2, # chi
-                (0.0)**2, # wn
-                (0.0)**2, # we
-                (0.0)**2, # psi
+                (0.03)**2,  # pn
+                (0.03)**2,  # pe
+                (0.03)**2,  # Vg
+                (0.03)**2, # chi
+                (0.03)**2, # wn
+                (0.03)**2, # we
+                (0.03)**2, # psi
                 ]), 
             P0=np.diag([
-                (0.)**2, # pn
-                (0.0)**2, # pe
-                (0.0)**2, # Vg
-                (0.*np.pi/180.)**2, # chi
-                (0.0)**2, # wn
-                (0.0)**2, # we
-                (0.*np.pi/180.)**2, # psi
+                (1)**2, # pn
+                (1)**2, # pe
+                (1)**2, # Vg
+                (30.*np.pi/180.)**2, # chi
+                (10.0)**2, # wn
+                (10.0)**2, # we
+                (30.*np.pi/180.)**2, # psi
                 ]), 
             xhat0=np.array([
                 [0.0], # pn 
                 [0.0], # pe 
-                [0.0], # Vg 
+                [25], # Vg 
                 [0.0], # chi
                 [0.0], # wn 
                 [0.0], # we 
@@ -291,8 +291,9 @@ class Observer:
                           [0, 0, 0, 0, 0, 0, 0]])"""
         xdot = np.array([[Vg*np.cos(chi)],
                          [Vg*np.sin(chi)], 
-                         [((Va*np.cos(psi)+wn)*(-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg], 
-                         [parameters.gravity/Vg*np.tan(phi)*np.cos(chi-psi)], 
+                         # [((Va*np.cos(psi)+wn)*(-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg], 
+                         [Va*psi_dot*(we*np.cos(psi)-wn*np.sin(psi))/Vg],
+                         [parameters.gravity/Vg*np.tan(phi)], 
                          [0], 
                          [0], 
                          [q*np.sin(phi)/np.cos(theta) + r*np.cos(phi)/np.cos(theta)]])
@@ -300,7 +301,7 @@ class Observer:
 
     def h_pseudo(self, x: np.ndarray, u: np.ndarray)->np.ndarray:
         '''
-            measurement model measurement model for wind triangale pseudo measurement: y=y(x, u)
+            measurement model measurement model for wind triangle pseudo measurement: y=y(x, u)
                 x = [pn, pe, Vg, chi, wn, we, psi].T
                 u = [q, r, Va, phi, theta].T
             returns
@@ -332,4 +333,3 @@ class Observer:
         chi = x[3]
         y = np.array([pn, pe, Vg, chi])
         return y
-

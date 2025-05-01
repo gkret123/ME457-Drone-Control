@@ -26,6 +26,7 @@ from estimators.observer import Observer
 #rom estimators.observer2_test import Observer
 from viewers.view_manager import ViewManager
 import time
+from message_types.msg_path import MsgPath
 
 #quitter = QuitListener()
 
@@ -34,6 +35,13 @@ wind = WindSimulation(SIM.ts_simulation)
 mav = MavDynamics(SIM.ts_simulation)
 autopilot = Autopilot(SIM.ts_simulation)
 observer = Observer(SIM.ts_simulation)
+viewers = ViewManager(path=True, 
+                      data=True,
+                      video=False, 
+                      animation=True,
+                      video_name='chap6.mp4')
+path = MsgPath()
+
 
 viewers = ViewManager(
     animation=True,      # turn on all the “animation” viewers
