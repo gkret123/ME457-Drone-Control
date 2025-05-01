@@ -75,16 +75,26 @@ end_time = 300
 print("Press 'Esc' to exit...")
 while sim_time < end_time:
 
+    """
     # -------autopilot commands-------------
     commands.airspeed_command = Va_command.polynomial(sim_time)
     commands.course_command = chi_command.polynomial(sim_time)
     commands.altitude_command = h_command.polynomial(sim_time)
-
+    """
+    # -------autopilot commands-------------
+    commands.airspeed_command = Va_command.square(sim_time)
+    commands.course_command = chi_command.square(sim_time)
+    commands.altitude_command = h_command.square(sim_time)
+    
     # -------- autopilot -------------
     measurements = mav.sensors()  # get sensor measurements
     estimated_state = observer.update(measurements)  # estimate states from measurements
     delta, commanded_state = autopilot.update(commands, estimated_state)
     #delta, commanded_state = autopilot.update(commands, mav.true_state)
+    
+
+   
+
 
     # -------- physical system -------------
     current_wind = wind.update()  # get the new wind vector
