@@ -15,7 +15,7 @@ from estimators.filters import AlphaFilter, ExtendedKalmanFilterContinuousDiscre
 import parameters.aerosonde_parameters as parameters
 from estimators.filters import KalmanFilterDiscrete
 
-class Observer2:
+class Observer:
     def __init__(self, ts: float, initial_measurements: MsgSensors=MsgSensors()):
         self.Ts = ts  # sample rate of observer
         # initialized estimated state message
