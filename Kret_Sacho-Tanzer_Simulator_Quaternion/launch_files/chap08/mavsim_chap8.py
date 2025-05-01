@@ -75,16 +75,16 @@ end_time = 300
 print("Press 'Esc' to exit...")
 while sim_time < end_time:
 
-    """
+    
     # -------autopilot commands-------------
     commands.airspeed_command = Va_command.polynomial(sim_time)
     commands.course_command = chi_command.polynomial(sim_time)
     commands.altitude_command = h_command.polynomial(sim_time)
-    """
+    
     # -------autopilot commands-------------
-    commands.airspeed_command = Va_command.square(sim_time)
-    commands.course_command = chi_command.square(sim_time)
-    commands.altitude_command = h_command.square(sim_time)
+    # commands.airspeed_command = Va_command.square(sim_time)
+    # commands.course_command = chi_command.square(sim_time)
+    # commands.altitude_command = h_command.square(sim_time)
     
     # -------- autopilot -------------
     measurements = mav.sensors()  # get sensor measurements

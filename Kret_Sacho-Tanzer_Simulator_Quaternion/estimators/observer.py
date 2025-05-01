@@ -29,8 +29,8 @@ class Observer:
         self.lpf_accel_y = AlphaFilter(alpha=0.7, y0=initial_measurements.accel_y)
         self.lpf_accel_z = AlphaFilter(alpha=0.7, y0=initial_measurements.accel_z)
         # use alpha filters to low pass filter absolute and differential pressure
-        self.lpf_abs = AlphaFilter(alpha=0., y0=initial_measurements.abs_pressure)
-        self.lpf_diff = AlphaFilter(alpha=0., y0=initial_measurements.diff_pressure)
+        self.lpf_abs = AlphaFilter(alpha=0.7, y0=initial_measurements.abs_pressure)
+        self.lpf_diff = AlphaFilter(alpha=0.7, y0=initial_measurements.diff_pressure)
         # ekf for phi and theta
         self.attitude_ekf = ExtendedKalmanFilterContinuousDiscrete(
             f=self.f_attitude, 
@@ -100,8 +100,8 @@ class Observer:
                 SENSOR.accel_sigma**2
                 ])
         self.R_pseudo = np.diag([
-                0.0,  # pseudo measurement #1 ##### TODO #####
-                0.0,  # pseudo measurement #2 ##### TODO #####
+                0.0001,  # pseudo measurement #1 ##### TODO #####
+                0.0001,  # pseudo measurement #2 ##### TODO #####
                 ])
         self.R_gps = np.diag([
                     SENSOR.gps_n_sigma**2,  # y_gps_n
@@ -274,8 +274,8 @@ class Observer:
         Va, q, r, phi, theta = u.flatten()
         #q, r, Va, phi, theta = u.flatten()
         psi_dot = q * np.sin(phi) / np.cos(theta) + r * np.cos(phi) / np.cos(theta)
-        """Vg_dot = ((Va*np.cos(psi)+wn) * (-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg
-        chi_dot = parameters.gravity/Vg*np.tan(phi)*np.cos(chi-psi)
+        Vg_dot = ((Va*np.cos(psi)+wn) * (-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg
+        """chi_dot = parameters.gravity/Vg*np.tan(phi)*np.cos(chi-psi)
 
         del_vgdot_psi = -psi_dot*Va*(wn*np.cos(psi)+we*np.sin(psi))/Vg
         del_chidot_vg = -parameters.gravity/Vg**2*np.tan(phi)*np.cos(chi-psi)
@@ -292,8 +292,10 @@ class Observer:
         xdot = np.array([[Vg*np.cos(chi)],
                          [Vg*np.sin(chi)], 
                          # [((Va*np.cos(psi)+wn)*(-Va*psi_dot*np.sin(psi))+(Va*np.sin(psi)+we)*(Va*psi_dot*np.cos(psi)))/Vg], 
-                         [Va*psi_dot*(we*np.cos(psi)-wn*np.sin(psi))/Vg],
-                         [parameters.gravity/Vg*np.tan(phi)], 
+                         # [Va*psi_dot*(we*np.cos(psi)-wn*np.sin(psi))/Vg],
+                         [Vg_dot],
+                         # [parameters.gravity/Vg*np.tan(phi)], 
+                         [parameters.gravity/Vg*np.tan(phi)*np.cos(chi-psi)], 
                          [0], 
                          [0], 
                          [q*np.sin(phi)/np.cos(theta) + r*np.cos(phi)/np.cos(theta)]])

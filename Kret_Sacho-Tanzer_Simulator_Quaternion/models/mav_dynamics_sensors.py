@@ -59,9 +59,12 @@ class MavDynamics(MavDynamicsNoSensors):
         # simulate magnetometers
         # magnetic field in provo has magnetic declination of 12.5 degrees
         # and magnetic inclination of 66 degrees
-        self._sensors.mag_x = 0
-        self._sensors.mag_y = 0
-        self._sensors.mag_z = 0
+        M = 1  # overall strength of magnetic field. NOTE: I made this up
+        inclination = np.radians(66)  # magnetic inclination
+        declination = np.radians(12.5)  # magnetic declination
+        self._sensors.mag_x = M*np.cos(psi-declination)*np.cos(inclination) + np.random.normal(0, SENSOR.mag_sigma)  # magnetic field in NED frame
+        self._sensors.mag_y = -M*np.sin(psi-declination)*np.cos(inclination) + np.random.normal(0, SENSOR.mag_sigma)  # magnetic field in NED frame 
+        self._sensors.mag_z = M*np.sin(inclination) + np.random.normal(0, SENSOR.mag_sigma)  # magnetic field in NED frame
 
         # simulate pressure sensors 
 
