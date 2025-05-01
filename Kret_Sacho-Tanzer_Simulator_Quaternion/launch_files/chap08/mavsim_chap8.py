@@ -35,12 +35,9 @@ wind = WindSimulation(SIM.ts_simulation)
 mav = MavDynamics(SIM.ts_simulation)
 autopilot = Autopilot(SIM.ts_simulation)
 observer = Observer(SIM.ts_simulation)
-viewers = ViewManager(path=True, 
-                      data=True,
-                      video=False, 
-                      animation=True,
-                      video_name='chap6.mp4')
-path = MsgPath()
+
+
+
 
 
 viewers = ViewManager(
@@ -52,6 +49,7 @@ viewers = ViewManager(
     video_name='chap8.mp4'
 )
 
+path = MsgPath()
 
 # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
@@ -99,6 +97,7 @@ while sim_time < end_time:
         estimated_state=estimated_state,  # estimated states        
         commanded_state=commanded_state,  # commanded states
         delta=delta, # inputs to MAV
+        path=path, # path
     )
         
     # -------Check to Quit the Loop-------
