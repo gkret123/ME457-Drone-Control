@@ -1,6 +1,8 @@
 import numpy as np
 from tools.rotations import euler_to_quaternion, quaternion_to_euler
 
+print("Using Cessna 172 parameters")
+
 ######################################################################################
                 #   Initial Conditions
 ######################################################################################

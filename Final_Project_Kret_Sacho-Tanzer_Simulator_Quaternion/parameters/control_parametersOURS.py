@@ -40,15 +40,15 @@ a_v_1 = ((MAV.rho * Va_trim * MAV.S_wing) / MAV.mass) * \
 a_v_2 = (MAV.rho * MAV.S_prop * C_prop * k_motor ** 2 ) / MAV.mass
 a_v_3 = MAV.gravity * np.cos(theta_trim - alpha_trim)
 
-# from luchtenburg:
-a_phi_1 = 22.628851
-a_phi_2 = 130.883678
-a_theta_1 = 5.294738
-a_theta_2 = 99.947422
-a_theta_3 = -36.112390
-a_v_1 = 0.052559
-a_v_2 = 10.698657
-a_v_3 = 9.651117
+# # from luchtenburg:
+# a_phi_1 = 22.628851
+# a_phi_2 = 130.883678
+# a_theta_1 = 5.294738
+# a_theta_2 = 99.947422
+# a_theta_3 = -36.112390
+# a_v_1 = 0.052559
+# a_v_2 = 10.698657
+# a_v_3 = 9.651117
 
 
 #----------roll loop-------------

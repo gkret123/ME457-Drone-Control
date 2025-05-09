@@ -2,13 +2,18 @@ import numpy as np
 from tools.rotations import euler_to_quaternion, quaternion_to_euler
 
 ######################################################################################
+                #   NOTE: These are parameters for Cessna 172
+######################################################################################
+print("Using Cessna 172 parameters")
+
+######################################################################################
                 #   Initial Conditions
 ######################################################################################
 #   Initial conditions for MAV
 north0 = 0.  # initial north position
 east0 = 0.  # initial east position
 down0 = -100.0  # initial down position
-u0 = 25.  # initial velocity along body x-axis
+u0 = 65.  # initial velocity along body x-axis
 v0 = 0.  # initial velocity along body y-axis
 w0 = 0.  # initial velocity along body z-axis
 phi0 = 0.  # initial roll angle
@@ -29,65 +34,69 @@ e3 = e.item(3)
 ######################################################################################
                 #   Physical Parameters
 ######################################################################################
-mass = 11. #kg
-Jx = 0.8244 #kg m^2
-Jy = 1.135
-Jz = 1.759
-Jxz = 0.1204
-S_wing = 0.55
-b = 2.8956
-c = 0.18994
-S_prop = 0.2027
+mass = 1043.3 #kg
+Jx = 1285.3 #kg m^2
+Jy = 1824.9 #kg m^2
+Jz = 2666.9 #kg m^2
+Jxz = 0.0 #kg m^2  # NOTE: this is 0 from the source, but feels sketchy
+S_wing = 16.1651 # m^2
+b = 10.9118 # m
+c = 1.4935  # m
+
 rho = 1.2682
-e = 0.9
 AR = (b**2) / S_wing
 gravity = 9.81
+
+# S_prop = 0.2027
+# e = 0.9
+
 
 ######################################################################################
                 #   Longitudinal Coefficients
 ######################################################################################
-C_L_0 = 0.23
-C_D_0 = 0.0424
-C_m_0 = 0.0135
-C_L_alpha = 5.61
-C_D_alpha = 0.132
-C_m_alpha = -2.74
-C_L_q = 7.95
+C_L_0 = 0.31
+C_D_0 = 0.031
+C_m_0 = -0.015
+C_L_alpha = 5.143
+C_D_alpha = 0.13
+C_m_alpha = -0.89
+C_L_q = 3.9
 C_D_q = 0.0
-C_m_q = -38.21
-C_L_delta_e = 0.13
-C_D_delta_e = 0.0135
-C_m_delta_e = -0.99
-M = 50.0
-alpha0 = 0.47
-epsilon = 0.16
-C_D_p = 0.043
+C_m_q = -12.4
+C_L_delta_e = 0.43
+C_D_delta_e = 0.06
+C_m_delta_e = -1.28
+
+# M = 50.0
+# alpha0 = 0.47
+# epsilon = 0.16
+# C_D_p = 0.043
 
 
 ######################################################################################
                 #   Lateral Coefficients
 ######################################################################################
-C_Y_0 = 0.0
+C_Y_0 = 0.0  # NOTE: this wasn't in the source, but was 0 for aerosonde
 C_ell_0 = 0.0
 C_n_0 = 0.0
-C_Y_beta = -0.98
-C_ell_beta = -0.13
-C_n_beta = 0.073
-C_Y_p = 0.0
-C_ell_p = -0.51
-C_n_p = 0.069
-C_Y_r = 0.0
-C_ell_r = 0.25
-C_n_r = -0.095
-C_Y_delta_a = 0.075
-C_ell_delta_a = 0.17
-C_n_delta_a = -0.011
-C_Y_delta_r = 0.19
-C_ell_delta_r = 0.0024
-C_n_delta_r = -0.069
+C_Y_beta = -0.31
+C_ell_beta = -0.089
+C_n_beta = 0.065
+C_Y_p = -0.037
+C_ell_p = -0.47
+C_n_p = -0.03
+C_Y_r = 0.21
+C_ell_r = 0.096
+C_n_r = -0.099
+C_Y_delta_a = 0.0
+C_ell_delta_a = -0.178
+C_n_delta_a = -0.053
+C_Y_delta_r = 0.187
+C_ell_delta_r = 0.0147
+C_n_delta_r = -0.0657
 
 ######################################################################################
-                #   Propeller thrust / torque parameters (see addendum by McLain)
+                #   Propeller thrust / torque parameters (see addendum by McLain)  TODO: all of these are wrong for cessna 172
 ######################################################################################
 # Prop parameters
 D_prop = 20*(0.0254)     # prop diameter in m
