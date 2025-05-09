@@ -160,9 +160,11 @@ class MavDynamics(MavDynamicsForces):
         B_p = 0.132
 
         thrust_prop = SP*(A_p*MAV.rho/MAV.rho-B_p)*eta/self._Va  # source: https://archive.aoe.vt.edu/lutze/AOE3104/thrustmodels.pdf
+        torque_prop = 0  # NOTE: this is just a guess, but let's assume it's negligible
 
         # thrust_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 4) * C_T
-        torque_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 5) * C_Q
+        # torque_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 5) * C_Q
+
 
         return thrust_prop, torque_prop
 
