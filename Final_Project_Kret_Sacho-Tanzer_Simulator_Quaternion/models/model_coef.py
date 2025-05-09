@@ -4,23 +4,11 @@ import parameters.aerosonde_parameters as MAV
 
 x_trim = np.array([[0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000]]).T
 u_trim = np.array([[0.000000, 0.000000, 0.000000, 0.000000]]).T
-x_trim = np.array([[ 1.28942784e-15]
-                    [ 1.28414376e-15]
-                    [-2.55779463e-15]
-                    [ 6.49935757e+01]#u
-                    [ 0.00000000e+00]#v
-                    [-9.13844471e-01]#w
-                    [ 9.99978182e-01]
-                    [ 0.00000000e+00]
-                    [-6.60574068e-03]
-                    [ 0.00000000e+00]
-                    [ 0.00000000e+00]
-                    [ 0.00000000e+00]
-                    [ 0.00000000e+00]]).T
+x_trim = np.array([1.28942784e-15, 1.28414376e-15, -2.55779463e-15, 6.49935757e+01, 0.00000000e+00, -9.13844471e-01, 9.99978182e-01, 0.00000000e+00, -6.60574068e-03, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00])
 # Delta_trim: elevator= -0.0015578767550296886 aileron= -8.36815132248315e-09 rudder= -1.654545932142433e-08 throttle= 1.5114249917811482 azimuth_cmd= 0.0 elevation_cmd= 0.0 
 Va_trim = 65
 alpha_trim = np.arctan2(x_trim[5], x_trim[3])  
-phi_trim, theta_trim, psi_trim = quaternion_to_euler(x_trim[6], x_trim[7], x_trim[8], x_trim[9])
+phi_trim, theta_trim, psi_trim = quaternion_to_euler(np.array([x_trim[6], x_trim[7], x_trim[8], x_trim[9]]))
 delta_e_trim = -0.0015578767550296886
 delta_t_trim = 1.5114249917811482
 
