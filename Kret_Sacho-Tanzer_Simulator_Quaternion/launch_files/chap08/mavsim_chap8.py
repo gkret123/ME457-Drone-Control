@@ -93,9 +93,6 @@ while sim_time < end_time:
     #delta, commanded_state = autopilot.update(commands, mav.true_state)
     
 
-   
-
-
     # -------- physical system -------------
     current_wind = wind.update()  # get the new wind vector
     mav.update(delta, current_wind)  # propagate the MAV dynamics
@@ -122,9 +119,5 @@ while sim_time < end_time:
 viewers.close(dataplot_name="ch8_data_plot", 
               sensorplot_name="ch8_sensor_plot")
 
-
-
-
-
-
-
+# TODO: beta_e is always 0, wn and we are always 0
+# beta_e is 0 because it's not being estimated (?) (says on observer line 193)
