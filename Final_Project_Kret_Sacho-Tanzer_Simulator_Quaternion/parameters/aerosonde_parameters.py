@@ -2,7 +2,7 @@ import numpy as np
 from tools.rotations import euler_to_quaternion, quaternion_to_euler
 
 ######################################################################################
-                #   NOTE: These are parameters for Cessna 172
+                #   NOTE: These are parameters for Cessna 172. Source (unless otherwise noted): https://www.researchgate.net/figure/Stability-derivatives-for-Cessna-172_fig11_309468360
 ######################################################################################
 print("Using Cessna 172 parameters")
 
@@ -99,12 +99,12 @@ C_n_delta_r = -0.0657
                 #   Propeller thrust / torque parameters (see addendum by McLain)  TODO: all of these are wrong for cessna 172
 ######################################################################################
 # Prop parameters
-D_prop = 20*(0.0254)     # prop diameter in m
+D_prop = 1.93     # prop diameter in m  # SOURCE: https://www.researchgate.net/publication/353752543_Cessna_172_Flight_Simulation_Data#:~:text=Number%20of%20blades%202%20
 
 # Motor parameters
 KV_rpm_per_volt = 145.                            # Motor speed constant from datasheet in RPM/V
 KV = (1. / KV_rpm_per_volt) * 60. / (2. * np.pi)  # Back-emf constant, KV in V-s/rad
-KQ = KV                                           # Motor torque constant, KQ in N-m/A
+KQ = KV                                           # Motor torque constant, KQ in N-m/A  NOTE: needed
 R_motor = 0.042              # ohms
 i0 = 1.5                     # no-load (zero-torque) current (A)
 
@@ -114,12 +114,12 @@ ncells = 12.
 V_max = 3.7 * ncells  # max voltage for specified number of battery cells
 
 # Coeffiecients from prop_data fit
-C_Q2 = -0.01664
-C_Q1 = 0.004970
-C_Q0 = 0.005230
-C_T2 = -0.1079
-C_T1 = -0.06044
-C_T0 = 0.09357
+C_Q2 = 0.0109
+C_Q1 = -0.0088
+C_Q0 = 0.00635
+C_T2 = -0.0463
+C_T1 = -0.0195
+C_T0 = 0.045
 
 ######################################################################################
                 #   Calculation Variables

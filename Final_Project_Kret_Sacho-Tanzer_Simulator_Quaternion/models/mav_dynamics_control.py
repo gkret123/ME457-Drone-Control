@@ -133,25 +133,35 @@ class MavDynamics(MavDynamicsForces):
 
     def _motor_thrust_torque(self, Va, delta_t):
         # compute thrust and torque due to propeller from slides ch 4
-        #map 0-1 throttle to voltage
+        # map 0-1 throttle to voltage
         delta_t = np.clip(delta_t, 0, 1)  # clip throttle to 0, 1
-        V_in = MAV.V_max * delta_t
-        # Quadratic formula to solve for motor speed
-        a = MAV.C_Q0 * MAV.rho * np.power(MAV.D_prop , 5)/((2.* np.pi)**2)
-        b = (MAV.C_Q1 * MAV.rho * np.power(MAV.D_prop , 4) / (2. * np.pi )) * self._Va + MAV.KQ**2/MAV.R_motor
-        c = MAV.C_Q2 * MAV.rho * np.power (MAV.D_prop , 3) * self._Va**2 - (MAV.KQ / MAV.R_motor) * V_in + MAV.KQ * MAV.i0
+        # V_in = MAV.V_max * delta_t
+        # # Quadratic formula to solve for motor speed
+        # a = MAV.C_Q0 * MAV.rho * np.power(MAV.D_prop , 5)/((2.* np.pi)**2)
+        # b = (MAV.C_Q1 * MAV.rho * np.power(MAV.D_prop , 4) / (2. * np.pi )) * self._Va + MAV.KQ**2/MAV.R_motor
+        # c = MAV.C_Q2 * MAV.rho * np.power (MAV.D_prop , 3) * self._Va**2 - (MAV.KQ / MAV.R_motor) * V_in + MAV.KQ * MAV.i0
 
-        # Consider only positive root for Omega
-        Omega_op = (-b + np.sqrt(b**2-4*a*c)) / (2.* a )
+        # # Consider only positive root for Omega
+        # Omega_op = (-b + np.sqrt(b**2-4*a*c)) / (2.* a )
+        
+        # # compute advance ratio,
+        # J_op = 2 * np.pi * self._Va/(Omega_op * MAV.D_prop)
+        # # compute dimentionless coefficients of thrust and torque
+        # C_T = MAV.C_T2 * J_op ** 2 + MAV.C_T1 * J_op + MAV.C_T0
+        # C_Q = MAV.C_Q2 * J_op **2 + MAV.C_Q1 * J_op + MAV.C_Q0
+        # # add thrust and torque due to propeller
+        # n = Omega_op / (2 * np.pi)
+        
+        
+        max_power = 134000  # engine max power in watts (source: https://en.wikipedia.org/wiki/Cessna_172#:~:text=The%20Cessna%20172S%20was%20introduced,180%20horsepower%20(134%20kW).
+        SP = max(max_power * delta_t, 0.05*max_power)  # engine power in watts. Can't drop below 5% of max power
+        eta = 0.8  # apparently typical according to google
+        A_p = 1.132
+        B_p = 0.132
 
-        # compute advance ratio,
-        J_op = 2 * np.pi * self._Va/(Omega_op * MAV.D_prop)
-        # compute dimentionless coefficients of thrust and torque
-        C_T = MAV.C_T2 * J_op ** 2 + MAV.C_T1 * J_op + MAV.C_T0
-        C_Q = MAV.C_Q2 * J_op **2 + MAV.C_Q1 * J_op + MAV.C_Q0
-        # add thrust and torque due to propeller
-        n = Omega_op / (2 * np.pi)
-        thrust_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 4) * C_T
+        thrust_prop = SP*(A_p*MAV.rho/MAV.rho-B_p)*eta/self._Va  # source: https://archive.aoe.vt.edu/lutze/AOE3104/thrustmodels.pdf
+
+        # thrust_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 4) * C_T
         torque_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 5) * C_Q
 
         return thrust_prop, torque_prop
