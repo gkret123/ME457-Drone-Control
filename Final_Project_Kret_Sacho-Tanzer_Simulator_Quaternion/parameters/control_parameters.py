@@ -6,16 +6,16 @@ import models.model_coef as TF
 
 #### TODO #####
 gravity = MAV.gravity  # gravity constant
-Va0 = 25
-Va_trim = 25
-# from ariel:
-alpha_trim = 0.0501
-delta_trim = 0.67
-theta_trim = 0.0501
-# from luchtenberg:
-# alpha_trim = 0.0478
-# theta_trim = 0.222
-# delta_trim = 0.8577
+Va0 = 65
+Va_trim = 65
+# # from ariel:
+# alpha_trim = 0.0501
+# delta_trim = 0.67
+# theta_trim = 0.0501
+# # from luchtenberg:
+# # alpha_trim = 0.0478
+# # theta_trim = 0.222
+# # delta_trim = 0.8577
 
 
 

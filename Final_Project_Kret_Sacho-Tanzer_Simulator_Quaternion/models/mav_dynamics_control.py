@@ -153,14 +153,11 @@ class MavDynamics(MavDynamicsForces):
         # n = Omega_op / (2 * np.pi)
         
         
-        max_power = 134000  # engine max power in watts (source: https://en.wikipedia.org/wiki/Cessna_172#:~:text=The%20Cessna%20172S%20was%20introduced,180%20horsepower%20(134%20kW).
-        SP = max(max_power * delta_t, 0.05*max_power)  # engine power in watts. Can't drop below 5% of max power
-        eta = 0.8  # apparently typical according to google
-        A_p = 1.132
-        B_p = 0.132
 
-        thrust_prop = SP*(A_p*MAV.rho/MAV.rho-B_p)*eta/self._Va  # source: https://archive.aoe.vt.edu/lutze/AOE3104/thrustmodels.pdf
-        torque_prop = 0  # NOTE: this is just a guess, but let's assume it's negligible
+        SP = max(MAV.max_power * delta_t, 0.05*MAV.max_power)  # engine power in watts. Can't drop below 5% of max power
+
+        thrust_prop = SP*(MAV.A_p*MAV.rho/MAV.rho-MAV.B_p)*MAV.eta/self._Va  # source: https://archive.aoe.vt.edu/lutze/AOE3104/thrustmodels.pdf
+        torque_prop = 0  # NOTE: this is just a guess, but let's assume it's
 
         # thrust_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 4) * C_T
         # torque_prop = MAV.rho * n**2 * np.power(MAV.D_prop , 5) * C_Q

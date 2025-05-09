@@ -98,28 +98,36 @@ C_n_delta_r = -0.0657
 ######################################################################################
                 #   Propeller thrust / torque parameters (see addendum by McLain)  TODO: all of these are wrong for cessna 172
 ######################################################################################
+max_power = 134000  # engine max power in watts (source: https://en.wikipedia.org/wiki/Cessna_172#:~:text=The%20Cessna%20172S%20was%20introduced,180%20horsepower%20(134%20kW).
+eta = 0.8  # apparently typical according to google
+A_p = 1.132 # source: https://archive.aoe.vt.edu/lutze/AOE3104/thrustmodels.pdf
+B_p = 0.132
+
+
+
 # Prop parameters
-D_prop = 1.93     # prop diameter in m  # SOURCE: https://www.researchgate.net/publication/353752543_Cessna_172_Flight_Simulation_Data#:~:text=Number%20of%20blades%202%20
+# D_prop = 1.93     # prop diameter in m  # SOURCE: https://www.researchgate.net/publication/353752543_Cessna_172_Flight_Simulation_Data#:~:text=Number%20of%20blades%202%20
 
-# Motor parameters
-KV_rpm_per_volt = 145.                            # Motor speed constant from datasheet in RPM/V
-KV = (1. / KV_rpm_per_volt) * 60. / (2. * np.pi)  # Back-emf constant, KV in V-s/rad
-KQ = KV                                           # Motor torque constant, KQ in N-m/A  NOTE: needed
-R_motor = 0.042              # ohms
-i0 = 1.5                     # no-load (zero-torque) current (A)
+# # Motor parameters
+# KV_rpm_per_volt = 145.                            # Motor speed constant from datasheet in RPM/V
+# KV = (1. / KV_rpm_per_volt) * 60. / (2. * np.pi)  # Back-emf constant, KV in V-s/rad
+# KQ = KV                                           # Motor torque constant, KQ in N-m/A  NOTE: needed
+# R_motor = 0.042              # ohms
+# i0 = 1.5                     # no-load (zero-torque) current (A)
 
 
-# Inputs
-ncells = 12.
-V_max = 3.7 * ncells  # max voltage for specified number of battery cells
+# # Inputs
+# ncells = 12.
+# V_max = 3.7 * ncells  # max voltage for specified number of battery cells
 
-# Coeffiecients from prop_data fit
-C_Q2 = 0.0109
-C_Q1 = -0.0088
-C_Q0 = 0.00635
-C_T2 = -0.0463
-C_T1 = -0.0195
-C_T0 = 0.045
+# # Coeffiecients from prop_data fit
+# C_Q2 = 0.0109
+# C_Q1 = -0.0088
+# C_Q0 = 0.00635
+# C_T2 = -0.0463
+# C_T1 = -0.0195
+# C_T0 = 0.045
+
 
 ######################################################################################
                 #   Calculation Variables

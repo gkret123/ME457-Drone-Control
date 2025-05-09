@@ -24,16 +24,16 @@ mav = MavDynamics(Ts)
 wind = np.array([[0.], [0.], [0.]])
 delta = MsgDelta()
 
-# mav_temp = MavDynamics(Ts)
-# trim_state, trim_input = compute_trim(mav_temp, 25, 0.0)
-# print(trim_state)
-# trim_input.print()
+mav_temp = MavDynamics(Ts)
+trim_state, trim_input = compute_trim(mav_temp, 65, 0.0)
+print(trim_state)
+trim_input.print()
 
-trim_state = np.array([[0.000000, -0.000000, -100.000000, 24.968743, 0.000000, 1.249755, 0.999687, 0.000000, 0.025003, 0.000000, 0.000000, 0.000000, 0.000000]]).T
-trim_input = MsgDelta(elevator=-0.124778,
-                          aileron=0.001836,
-                          rudder=-0.000303,
-                          throttle=0.676752)
+# trim_state = np.array([[0.000000, -0.000000, -100.000000, 24.968743, 0.000000, 1.249755, 0.999687, 0.000000, 0.025003, 0.000000, 0.000000, 0.000000, 0.000000]]).T
+# trim_input = MsgDelta(elevator=-0.124778,
+#                           aileron=0.001836,
+#                           rudder=-0.000303,
+#                           throttle=0.676752)
 
 mav_temp = MavDynamics(Ts)
 mav_temp._state = trim_state
