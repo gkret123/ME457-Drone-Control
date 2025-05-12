@@ -53,7 +53,7 @@ K_theta_DC = pitch_kp * TF.a_theta3 / (TF.a_theta2 + pitch_kp * TF.a_theta3)
 
 #----------altitude loop-------------
 wn_altitude = wn_pitch / 30.0
-zeta_altitude = 1.0
+zeta_altitude = 1.5
 altitude_kp = 2.0 * zeta_altitude * wn_altitude / K_theta_DC / Va0
 altitude_ki = wn_altitude**2 / K_theta_DC / Va0
 altitude_zone = 5.0  # moving saturation limit around current altitude
