@@ -2,15 +2,17 @@ import numpy as np
 from tools.rotations import quaternion_to_euler
 import parameters.aerosonde_parameters as MAV
 
-x_trim = np.array([[0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000, 0.000000]]).T
-u_trim = np.array([[0.000000, 0.000000, 0.000000, 0.000000]]).T
-x_trim = np.array([1.28942784e-15, 1.28414376e-15, -2.55779463e-15, 6.49935757e+01, 0.00000000e+00, -9.13844471e-01, 9.99978182e-01, 0.00000000e+00, -6.60574068e-03, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00])
+
+x_trim = np.array([2.21483670e-16, 1.38603097e-15, -4.55482139e-15, 6.27964546e+01, 
+                   0.00000000e+00, -6.67304267e-01, 9.99985886e-01, 0.00000000e+00, 
+                   -5.31301475e-03, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 
+                   0.00000000e+00])
 # Delta_trim: elevator= -0.0015578767550296886 aileron= -8.36815132248315e-09 rudder= -1.654545932142433e-08 throttle= 1.5114249917811482 azimuth_cmd= 0.0 elevation_cmd= 0.0 
-Va_trim = 65
+Va_trim = 62.8
 alpha_trim = np.arctan2(x_trim[5], x_trim[3])  
 phi_trim, theta_trim, psi_trim = quaternion_to_euler(np.array([x_trim[6], x_trim[7], x_trim[8], x_trim[9]]))
-delta_e_trim = -0.0015578767550296886
-delta_t_trim = 1.5114249917811482
+delta_e_trim = -0.004330320590381889
+delta_t_trim = 0.6953171466096343
 
 a_phi1 = -1/2*MAV.rho*Va_trim**2*MAV.S_wing*MAV.b*MAV.C_p_p*MAV.b/(2*Va_trim)  # page 71 of pdf
 a_phi2 = 1/2*MAV.rho*Va_trim**2*MAV.S_wing*MAV.b*MAV.C_p_delta_a

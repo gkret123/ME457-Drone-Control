@@ -33,7 +33,7 @@ zeta_roll = 0.707
 roll_kp = wn_roll**2/TF.a_phi2
 roll_kd = (2.0 * zeta_roll * wn_roll - TF.a_phi1) / TF.a_phi2
 
-print('roll_kp =', roll_kp)
+# print('roll_kp =', roll_kp)
 
 
 #----------course loop-------------
