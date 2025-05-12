@@ -54,8 +54,8 @@ path = MsgPath()
 # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
 commands = MsgAutopilot()
-Va_command = Signals(dc_offset=25.0,
-                     amplitude=3.0,
+Va_command = Signals(dc_offset=60,
+                     amplitude=0,
                      start_time=2.0,
                      frequency = 0.01)
 h_command = Signals(dc_offset=100.0,

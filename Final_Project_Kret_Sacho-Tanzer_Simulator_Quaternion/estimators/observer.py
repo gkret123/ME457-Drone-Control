@@ -78,7 +78,7 @@ class Observer:
             xhat0=np.array([
                 [0.0], # pn 
                 [0.0], # pe 
-                [25.0], # Vg 
+                [62.8], # Vg 
                 [0.0], # chi
                 [0.0], # wn 
                 [0.0], # we 
