@@ -83,6 +83,8 @@ while sim_time < end_time:
     commands.airspeed_command = Va_command.step(sim_time)
     commands.course_command = chi_command.step(sim_time)
     commands.altitude_command = h_command.step(sim_time)
+
+    
     
     # -------- autopilot -------------
     measurements = mav.sensors()  # get sensor measurements

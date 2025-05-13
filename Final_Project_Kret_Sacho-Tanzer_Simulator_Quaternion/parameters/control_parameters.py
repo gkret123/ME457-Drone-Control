@@ -36,7 +36,7 @@ roll_kd = (2.0 * zeta_roll * wn_roll - TF.a_phi1) / TF.a_phi2
 
 #----------course loop-------------
 wn_course = wn_roll / 20.0
-zeta_course = 0.5
+zeta_course = 0.6
 course_kp = 2.0 * zeta_course * wn_course * Va0 / gravity
 course_ki = wn_course**2 * Va0 / gravity
 

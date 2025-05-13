@@ -110,6 +110,13 @@ while sim_time < end_time:
         commands.airspeed_command = 60.0
         commands.course_command = np.radians(180.)
         commands.altitude_command = 100.0
+        if (mav.true_state.chi >= np.radians(170.0)) and (mav.true_state.chi <= np.radians(190.0)) and (abs(mav._state[5]) <= 2.0):
+            stage = "Turn2"
+            print(f"{stage=}")
+    elif stage == "Turn2":
+        commands.airspeed_command = 60.0
+        commands.course_command = np.radians(360.)
+        commands.altitude_command = 100.0
 
         
 
