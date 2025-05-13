@@ -56,25 +56,28 @@ viewers = ViewManager(
 
 path = MsgPath()
 
-# autopilot commands
+# # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
 commands = MsgAutopilot()
-Va_command = Signals(dc_offset=62.8,
-                     amplitude=0,
-                     start_time=0,
-                     frequency = 0.01)
-h_command = Signals(dc_offset=100.0,
-                    amplitude=0.0,
-                    start_time=0.0,
-                    frequency=0.02)
-chi_command = Signals(dc_offset=np.radians(0.0),
-                      amplitude=np.radians(0.0),
-                      start_time=0.0,
-                      frequency=0.015)
+# Va_command = Signals(dc_offset=62.8,
+#                      amplitude=0,
+#                      start_time=0,
+#                      frequency = 0.01)
+# h_command = Signals(dc_offset=100.0,
+#                     amplitude=0.0,
+#                     start_time=0.0,
+#                     frequency=0.02)
+# chi_command = Signals(dc_offset=np.radians(0.0),
+#                       amplitude=np.radians(0.0),
+#                       start_time=0.0,
+#                       frequency=0.015)
 
 # initialize the simulation time
 sim_time = SIM.start_time
 end_time = 300
+
+stage = "Accelerate"
+print(f"{stage=}")
 
 # main simulation loop
 print("Press 'Esc' to exit...")
@@ -85,20 +88,35 @@ while sim_time < end_time:
     #commands.altitude_command = h_command.polynomial(sim_time)
     
     # -------autopilot commands-------------
-    commands.airspeed_command = Va_command.step(sim_time)
-    commands.course_command = chi_command.step(sim_time)
-    commands.altitude_command = h_command.step(sim_time)
+    # commands.airspeed_command = Va_command.step(sim_time)
+    # commands.course_command = chi_command.step(sim_time)
+    # commands.altitude_command = h_command.step(sim_time)
     
+    if stage == "Accelerate":
+        commands.airspeed_command = 30.0
+        commands.course_command = np.radians(0.0)
+        commands.altitude_command = 0.1
+        if mav.true_state.Va >= 28:
+            stage = "Takeoff"
+            print(f"{stage=}")
+    elif stage == "Takeoff":
+        commands.airspeed_command = 40.0
+        commands.course_command = np.radians(0.0)
+        commands.altitude_command = 200.0
+        if (mav.true_state.altitude >= 195.0) and (mav.true_state.altitude <= 205.0) and (abs(mav._state[5]) <= 2.0):
+            stage = "Cruise"
+            print(f"{stage=}")
+    elif stage == "Cruise":
+        commands.airspeed_command = 60.0
+        commands.course_command = np.radians(0.0)
+        commands.altitude_command = 200.0
+
     # -------- autopilot -------------
     measurements = mav.sensors()  # get sensor measurements
     estimated_state = observer.update(measurements)  # estimate states from measurements
     delta, commanded_state = autopilot.update(commands, estimated_state)
     #delta, commanded_state = autopilot.update(commands, mav.true_state)
     
-
-   
-
-
     # -------- physical system -------------
     current_wind = wind.update()  # get the new wind vector
     mav.update(delta, current_wind)  # propagate the MAV dynamics
