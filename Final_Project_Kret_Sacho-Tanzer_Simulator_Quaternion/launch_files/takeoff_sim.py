@@ -22,6 +22,7 @@ parameters.u0 = 1.
 import numpy as np
 import parameters.simulation_parameters as SIM
 from tools.signals import Signals
+from parameters import control_parameters as CP
 from models.mav_dynamics_sensors import MavDynamics
 from models.wind_simulation import WindSimulation
 from controllers.autopilot import Autopilot
@@ -34,7 +35,8 @@ import time
 from message_types.msg_path import MsgPath
 
 #quitter = QuitListener()
-
+chai = 18
+np.random.seed(4*chai)
 # initialize elements of the architecture
 wind = WindSimulation(SIM.ts_simulation)
 mav = MavDynamics(SIM.ts_simulation)
@@ -79,45 +81,51 @@ end_time = 300
 stage = "Accelerate"
 print(f"{stage=}")
 timer = 0
-
+timestamp = sim_time
 # main simulation loop
 print("Press 'Esc' to exit...")
 while sim_time < end_time:
     if stage == "Accelerate":
-        commands.airspeed_command = 40.0
+        commands.airspeed_command = min(62.8, 40 + 0.5 * (sim_time - timestamp))
         commands.course_command = np.radians(0.0)
         commands.altitude_command = 0.1
         if mav.true_state.Va >= 28:
             stage = "Takeoff"
             print(f"{stage=}")
+            timestamp = sim_time
     elif stage == "Takeoff":
-        commands.airspeed_command = 60.0
-        commands.course_command = np.radians(0.0)
-        commands.altitude_command = 100.0
+        commands.airspeed_command = min(62.8, 40 + 0.5 * (sim_time - timestamp))
+        commands.course_command = np.radians(0.01)
+        commands.altitude_command = min(100, 0.1 + 2 * (sim_time - timestamp))
         if (mav.true_state.altitude >= 95.0) and (mav.true_state.altitude <= 105.0) and (abs(mav._state[5]) <= 0.5):
             stage = "Cruise"
             print(f"{stage=}")
             timer = 5
+            timestamp = sim_time
     elif stage == "Cruise":
         timer -= SIM.ts_simulation
-        commands.airspeed_command = 60.0
-        commands.course_command = np.radians(0.0)
+        commands.airspeed_command = 62.8
+        commands.course_command = np.radians(0.1)
         commands.altitude_command = 100.0
         if timer <= 0:
             stage = "Turn"
+            CP.zeta_course = 0.6
             print(f"{stage=}")
+            timestamp = sim_time
     elif stage == "Turn":
-        commands.airspeed_command = 60.0
-        commands.course_command = np.radians(90.)
+        commands.airspeed_command = 62.8
+        commands.course_command = min(np.radians(140.0), np.radians(0.0) +  0.025 * (sim_time - timestamp))
         commands.altitude_command = 100.0
-        if (mav.true_state.chi >= np.radians(80.0)) and (mav.true_state.chi <= np.radians(100.0)) and (abs(mav._state[5]) <= 2.0):
+        if (mav.true_state.chi >= np.radians(88.0)) and (mav.true_state.chi <= np.radians(92.0)):
             stage = "Land"
+            CP.zeta_course = 5
+            CP.zeta_pitch = 1.5
             print(f"{stage=}")
             timestamp = sim_time
     elif stage == "Land":
-        commands.airspeed_command = 30 - 1.5 * (sim_time - timestamp)
+        commands.airspeed_command = 62.8 - 1 * (sim_time - timestamp)
         commands.course_command = np.radians(90.)
-        commands.altitude_command = 50 - 1 * (sim_time - timestamp)
+        commands.altitude_command = 100 - 1.25 * (sim_time - timestamp)
         if (mav.true_state.altitude <= 5.0) and (mav.true_state.altitude >= 0.0) and (abs(mav._state[5]) <= 2.0):
             stage = "touchdown"
             print(f"{stage=}")
