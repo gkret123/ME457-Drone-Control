@@ -54,17 +54,17 @@ path = MsgPath()
 # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
 commands = MsgAutopilot()
-Va_command = Signals(dc_offset=60,
+Va_command = Signals(dc_offset=62.8,
                      amplitude=0,
-                     start_time=2.0,
+                     start_time=0,
                      frequency = 0.01)
 h_command = Signals(dc_offset=100.0,
-                    amplitude=20.0,
+                    amplitude=0.0,
                     start_time=0.0,
                     frequency=0.02)
 chi_command = Signals(dc_offset=np.radians(0.0),
-                      amplitude=np.radians(45.0),
-                      start_time=10.0,
+                      amplitude=np.radians(0.0),
+                      start_time=0.0,
                       frequency=0.015)
 
 # initialize the simulation time
@@ -74,8 +74,6 @@ end_time = 300
 # main simulation loop
 print("Press 'Esc' to exit...")
 while sim_time < end_time:
-
-    
     # -------autopilot commands-------------
     #commands.airspeed_command = Va_command.polynomial(sim_time)
     #commands.course_command = chi_command.polynomial(sim_time)
