@@ -147,7 +147,7 @@ class Observer:
         self.estimated_state.theta = xhat_attitude.item(1)
         # estimate pn, pe, Vg, chi, wn, we, psi with ekf
         u_smooth = np.array([                
-                [self.estimated_state.Va],  # NOTE: Va used to be after r, we moved it here to align with f_smooth. Absolutely no idea if this is right
+                [self.estimated_state.Va],  # NOTE: Va used to be after r, we moved it here to align with f_smooth. This makes it work, the other way is bad
                 [self.estimated_state.q],
                 [self.estimated_state.r],                
                 [self.estimated_state.phi],
