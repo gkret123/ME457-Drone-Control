@@ -78,38 +78,40 @@ end_time = 300
 
 stage = "Accelerate"
 print(f"{stage=}")
+timer = 0
 
 # main simulation loop
 print("Press 'Esc' to exit...")
 while sim_time < end_time:
-    # -------autopilot commands-------------
-    #commands.airspeed_command = Va_command.polynomial(sim_time)
-    #commands.course_command = chi_command.polynomial(sim_time)
-    #commands.altitude_command = h_command.polynomial(sim_time)
-    
-    # -------autopilot commands-------------
-    # commands.airspeed_command = Va_command.step(sim_time)
-    # commands.course_command = chi_command.step(sim_time)
-    # commands.altitude_command = h_command.step(sim_time)
-    
     if stage == "Accelerate":
-        commands.airspeed_command = 30.0
+        commands.airspeed_command = 40.0
         commands.course_command = np.radians(0.0)
         commands.altitude_command = 0.1
         if mav.true_state.Va >= 28:
             stage = "Takeoff"
             print(f"{stage=}")
     elif stage == "Takeoff":
-        commands.airspeed_command = 40.0
-        commands.course_command = np.radians(0.0)
-        commands.altitude_command = 200.0
-        if (mav.true_state.altitude >= 195.0) and (mav.true_state.altitude <= 205.0) and (abs(mav._state[5]) <= 2.0):
-            stage = "Cruise"
-            print(f"{stage=}")
-    elif stage == "Cruise":
         commands.airspeed_command = 60.0
         commands.course_command = np.radians(0.0)
-        commands.altitude_command = 200.0
+        commands.altitude_command = 100.0
+        if (mav.true_state.altitude >= 95.0) and (mav.true_state.altitude <= 105.0) and (abs(mav._state[5]) <= 2.0):
+            stage = "Cruise"
+            print(f"{stage=}")
+            timer = 5
+    elif stage == "Cruise":
+        timer -= SIM.ts_simulation
+        commands.airspeed_command = 60.0
+        commands.course_command = np.radians(0.0)
+        commands.altitude_command = 100.0
+        if timer <= 0:
+            stage = "Turn"
+            print(f"{stage=}")
+    elif stage == "Turn":
+        commands.airspeed_command = 60.0
+        commands.course_command = np.radians(180.)
+        commands.altitude_command = 100.0
+
+        
 
     # -------- autopilot -------------
     measurements = mav.sensors()  # get sensor measurements
