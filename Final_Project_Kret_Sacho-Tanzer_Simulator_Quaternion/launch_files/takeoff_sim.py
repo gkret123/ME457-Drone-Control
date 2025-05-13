@@ -94,7 +94,7 @@ while sim_time < end_time:
         commands.airspeed_command = 60.0
         commands.course_command = np.radians(0.0)
         commands.altitude_command = 100.0
-        if (mav.true_state.altitude >= 95.0) and (mav.true_state.altitude <= 105.0) and (abs(mav._state[5]) <= 2.0):
+        if (mav.true_state.altitude >= 95.0) and (mav.true_state.altitude <= 105.0) and (abs(mav._state[5]) <= 0.5):
             stage = "Cruise"
             print(f"{stage=}")
             timer = 5
@@ -108,16 +108,24 @@ while sim_time < end_time:
             print(f"{stage=}")
     elif stage == "Turn":
         commands.airspeed_command = 60.0
-        commands.course_command = np.radians(180.)
+        commands.course_command = np.radians(90.)
         commands.altitude_command = 100.0
-        if (mav.true_state.chi >= np.radians(170.0)) and (mav.true_state.chi <= np.radians(190.0)) and (abs(mav._state[5]) <= 2.0):
-            stage = "Turn2"
+        if (mav.true_state.chi >= np.radians(80.0)) and (mav.true_state.chi <= np.radians(100.0)) and (abs(mav._state[5]) <= 2.0):
+            stage = "Land"
             print(f"{stage=}")
-    elif stage == "Turn2":
-        commands.airspeed_command = 60.0
-        commands.course_command = np.radians(360.)
-        commands.altitude_command = 100.0
-
+            timestamp = sim_time
+    elif stage == "Land":
+        commands.airspeed_command = 30 - 1.5 * (sim_time - timestamp)
+        commands.course_command = np.radians(90.)
+        commands.altitude_command = 50 - 1 * (sim_time - timestamp)
+        if (mav.true_state.altitude <= 5.0) and (mav.true_state.altitude >= 0.0) and (abs(mav._state[5]) <= 2.0):
+            stage = "touchdown"
+            print(f"{stage=}")
+            viewers.close(dataplot_name="ch8_data_plot", 
+              sensorplot_name="ch8_sensor_plot")
+            break
+            
+    
         
 
     # -------- autopilot -------------
