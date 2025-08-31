@@ -13,7 +13,8 @@ from message_types.msg_state import MsgState
 import parameters.aerosonde_parameters as MAV
 from tools.rotations import Quaternion2Euler, Quaternion2Rotation
 
-
+chai = 18
+np.random.seed(2*chai) # set random seed for reproducibility
 class TargetDynamics:
     def __init__(self, Ts, map):
         self.velocity = 15 #40.  # nominal velocity of the target

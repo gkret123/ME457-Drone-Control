@@ -9,6 +9,7 @@ mavsim_python
         3/11/2024 - RWB
 """
 import os, sys
+import matplotlib.pyplot as plt
 # insert parent directory at beginning of python search path
 from pathlib import Path
 sys.path.insert(0,os.fspath(Path(__file__).parents[2]))
@@ -57,7 +58,16 @@ viewers = ViewManager(
 )
 
 path = MsgPath()
-
+true_state_list = []
+estimated_state_list = []
+commanded_state_list = []
+euler_true_list = []
+euler_commanded_list = []
+euler_estimated_list = []
+north_list = []
+east_list = []
+altitude_list = []
+course_list = []
 # # autopilot commands
 from message_types.msg_autopilot import MsgAutopilot
 commands = MsgAutopilot()
@@ -76,7 +86,7 @@ commands = MsgAutopilot()
 
 # initialize the simulation time
 sim_time = SIM.start_time
-end_time = 300
+end_time = 400
 
 stage = "Accelerate"
 print(f"{stage=}")
@@ -152,7 +162,10 @@ while sim_time < end_time:
         mav._state[2] = 0.01
         # mav._state[6:10] = np.array([1.0, 0.0, 0.0, 0.0]).T
 
+    #save the altitude from all three states (commanded, estimated, true) at every time step
+    #create list for each state
 
+    
     # -------- update viewer -------------
     viewers.update(
         sim_time,
@@ -162,7 +175,21 @@ while sim_time < end_time:
         delta=delta, # inputs to MAV
         path=path, # path
     )
-        
+
+    true_state_list.append(mav.true_state.altitude)
+    estimated_state_list.append(estimated_state.altitude)
+    commanded_state_list.append(commanded_state.altitude)
+    euler_true_list.append([mav.true_state.phi, mav.true_state.theta, mav.true_state.psi])
+    euler_commanded_list.append([commanded_state.phi, commanded_state.theta, commanded_state.psi])
+    euler_estimated_list.append([estimated_state.phi, estimated_state.theta, estimated_state.psi])
+    north_list.append([mav.true_state.north, estimated_state.north])
+    east_list.append([mav.true_state.east, estimated_state.east])
+    altitude_list.append([mav.true_state.altitude, estimated_state.altitude])
+    course_list.append([mav.true_state.chi, estimated_state.chi, commanded_state.chi])
+
+    
+
+
     # -------Check to Quit the Loop-------
     # if quitter.check_quit():
     #     break
@@ -174,6 +201,71 @@ while sim_time < end_time:
 # close viewers
 viewers.close(dataplot_name="ch8_data_plot", 
               sensorplot_name="ch8_sensor_plot")
+
+
+
+plt.figure()
+plt.plot(true_state_list, label='True State')
+plt.plot(estimated_state_list, label='Estimated State')
+plt.plot(commanded_state_list, label='Commanded State')
+plt.title('Altitude')
+plt.xlabel('Time (s)')
+plt.ylabel('Altitude (m)')
+plt.legend()
+
+
+plt.figure()
+plt.plot(euler_true_list, label=['\u03D5 True State', '\u03B8 True State', '\u03C8 True State'])
+plt.plot(euler_estimated_list, label=['\u03D5 Estimated State', '\u03B8 Estimated State', '\u03C8 Estimated State'])
+plt.plot(euler_commanded_list, label=['\u03D5 Commanded State', '\u03B8 Commanded State', '\u03C8 Commanded State'])
+plt.title('Euler Angles')
+plt.xlabel('Time (s)')
+plt.ylabel('Euler Angles (rad)')
+plt.legend()
+
+
+#plot true state position as a 3dplot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Extract trajectory data properly
+true_north = [x[0] for x in north_list]
+true_east = [x[0] for x in east_list]
+true_alt = [x[0] for x in altitude_list]
+
+est_north = [x[1] for x in north_list]
+est_east = [x[1] for x in east_list]
+est_alt = [x[1] for x in altitude_list]
+
+# Plot complete trajectories
+ax.plot(true_north, true_east, true_alt, label='True State Position')
+ax.plot(est_north, est_east, est_alt, label='Estimated State Position')
+
+# Mark start and end points
+ax.scatter(true_north[0], true_east[0], true_alt[0], color='red', label='Start Position')
+ax.scatter(true_north[-1], true_east[-1], true_alt[-1], color='green', label='End Position')
+
+ax.legend()
+ax.set_xlabel('North Position (m)')
+ax.set_ylabel('East Position (m)')
+ax.set_zlabel('Altitude (m)')
+ax.set_title('MAV Position')
+
+#plot course angle in degrees
+plt.figure()
+plt.plot([np.degrees(x[0]) for x in course_list], label='True State')
+plt.plot([np.degrees(x[1]) for x in course_list], label='Estimated State')
+plt.plot([np.degrees(x[2]) for x in course_list], label='Commanded State')
+plt.title('Course Angle')
+plt.xlabel('Time (s)')
+plt.ylabel('Course Angle (rad)')
+plt.legend()
+plt.show()
+
+
+
+
+#plot height comanded vs actual (from the true state)
 
 
 

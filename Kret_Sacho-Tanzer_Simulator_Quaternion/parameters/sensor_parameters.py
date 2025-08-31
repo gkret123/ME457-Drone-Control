@@ -1,5 +1,5 @@
 import numpy as np
-
+np.random.seed(4*18)
 #-------- Accelerometer --------
 accel_sigma = 0.0025*9.81  # standard deviation of accelerometers in m/s^2
 

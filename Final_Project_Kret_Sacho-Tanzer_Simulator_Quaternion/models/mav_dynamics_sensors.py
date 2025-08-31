@@ -16,6 +16,8 @@ import parameters.sensor_parameters as SENSOR
 from models.mav_dynamics_control import MavDynamics as MavDynamicsNoSensors
 from tools.rotations import quaternion_to_rotation, quaternion_to_euler, euler_to_rotation
 
+chai = 18
+np.random.seed(4*chai)
 class MavDynamics(MavDynamicsNoSensors):
     def __init__(self, Ts: float):
         super().__init__(Ts)
